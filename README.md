@@ -1,4 +1,6 @@
-# Maqueta web · consultas de lactancia
+# Breasties · The best of the breast
+
+Web de las consultas de lactancia de María Izquierdo, matrona.
 
 Web estática (HTML y CSS, sin instalar nada) para probar el diseño y publicarla gratis en GitHub Pages.
 
@@ -10,7 +12,9 @@ Web estática (HTML y CSS, sin instalar nada) para probar el diseño y publicarl
 - `sobre-mi.html`: presentación
 - `blog.html` y `articulo-primeras-semanas.html`: blog y un artículo de ejemplo
 - `aviso-legal.html`: borrador de aviso legal, privacidad y cookies
-- `styles.css`: todos los colores y estilos
+- `styles.css`: todos los colores y estilos (estilo acuarela: rosa empolvado, crema, melocotón y salvia)
+
+Las páginas usan las tipografías DM Serif Display, Nunito y Caveat de Google Fonts (necesitan conexión; sin ella se ven con tipos del sistema).
 
 ## Probarla en tu ordenador
 
@@ -35,14 +39,13 @@ Busca estas palabras en todos los archivos (en un editor de texto, con "Buscar e
 
 | Marcador | Qué poner |
 |---|---|
-| `NOMBRE APELLIDO` y `NOMBRE` | Nombre real |
 | `EMAIL`, `TELEFONO`, `DIRECCION, CIUDAD` | Datos de contacto |
 | `NUMERO` | Número de colegiada |
 | `NIF`, `COLEGIO` | Datos del aviso legal |
 | `TU-USUARIO` | Tu usuario de Cal.com (en `reservar.html`) |
 | `XX €` | Precios reales |
 
-También hay que reemplazar los textos de ejemplo y añadir fotos.
+También hay que reemplazar los textos de ejemplo y añadir fotos: en los marcos de foto (clase `foto`) borra el texto y pon `<img src="tu-foto.jpg" alt="descripción">`; la imagen se recorta sola a la forma del marco.
 
 ## Citas con Cal.com
 
@@ -53,7 +56,7 @@ También hay que reemplazar los textos de ejemplo y añadir fotos.
 
 ## Cambiar los colores
 
-En lo alto de `styles.css` están las variables (`--terracota`, `--crema`, `--tinta`...). Cambia ahí los colores y se actualiza toda la web.
+En lo alto de `styles.css` están las variables (`--acento`, `--rosa`, `--crema`, `--tinta`...). Cambia ahí los colores y se actualiza toda la web.
 
 ## Importante antes de publicar
 

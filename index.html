@@ -3,14 +3,38 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Consultas de lactancia · NOMBRE APELLIDO, matrona</title>
-  <meta name="description" content="Consultas de lactancia con matrona, presenciales y online. Acompañamiento cercano para madres y bebés.">
+  <title>Breasties · The best of the breast · María Izquierdo, matrona</title>
+  <meta name="description" content="Breasties: consultas de lactancia con la matrona María Izquierdo, presenciales y online. Acompañamiento cercano para madres y bebés.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Nunito:wght@400;600;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="acuarela" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="3" seed="7" result="ruido"/>
+      <feDisplacementMap in="SourceGraphic" in2="ruido" scale="16" xChannelSelector="R" yChannelSelector="G" result="desp"/>
+      <feGaussianBlur in="desp" stdDeviation="1.4"/>
+    </filter>
+    <symbol id="chispa" viewBox="-12 -12 24 24"><path d="M0 -11 C1 -4 4 -1 11 0 C4 1 1 4 0 11 C-1 4 -4 1 -11 0 C-4 -1 -1 -4 0 -11Z" fill="currentColor"/></symbol>
+    <symbol id="corazon" viewBox="0 0 24 24"><path d="M12 21 C4 15 2 11 2 8 C2 5 4.5 3 7 3 C9 3 11 4 12 6 C13 4 15 3 17 3 C19.5 3 22 5 22 8 C22 11 20 15 12 21Z" fill="currentColor"/></symbol>
+    <symbol id="nube" viewBox="0 0 120 70"><path d="M30 64 C10 64 4 40 24 34 C24 12 54 4 66 22 C78 8 108 20 100 44 C116 46 114 64 96 64 Z" fill="currentColor"/></symbol>
+    <symbol id="ramita" viewBox="0 0 40 80">
+      <path d="M20 78 C21 52 20 30 20 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M20 60 C8 58 4 48 6 40 C16 42 20 50 20 60Z" fill="currentColor"/>
+      <path d="M20 48 C32 46 36 36 34 28 C24 30 20 38 20 48Z" fill="currentColor"/>
+      <path d="M20 32 C10 30 8 22 10 16 C18 18 20 24 20 32Z" fill="currentColor"/>
+      <path d="M20 20 C28 18 30 12 28 6 C22 8 20 14 20 20Z" fill="currentColor"/>
+    </symbol>
+  </defs>
+</svg>
   <header class="sitio">
     <div class="wrap">
-      <a class="marca" href="index.html">NOMBRE APELLIDO · Lactancia</a>
+      <a class="marca" href="index.html">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#corazon"/></svg>
+        <span class="marca-texto"><span class="marca-nombre">Breasties</span><span class="marca-lema">The best of the breast</span></span>
+      </a>
       <nav aria-label="Principal">
         <ul>
           <li><a href="index.html" aria-current="page">Inicio</a></li>
@@ -27,91 +51,194 @@
     <section class="portada">
       <div class="wrap">
         <div>
-          <h1>Acompañamiento en lactancia, sin prisas y sin juicios</h1>
+          <div class="titular">
+            <div class="marca-grande">Breasties</div>
+            <div class="lema">The best of the breast <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#corazon"/></svg></div>
+            <svg class="garabato" width="30" height="30" viewBox="0 0 24 24" aria-hidden="true" style="left:0;top:-26px;color:var(--oro)"><use href="#chispa"/></svg>
+            <svg class="garabato" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" style="right:6%;top:-10px;color:var(--rosa-fuerte)"><use href="#chispa"/></svg>
+            <div class="firma">María Izquierdo · matrona · consultas de lactancia</div>
+          </div>
+          <h1>Acompañamiento en lactancia, <em>sin prisas</em> y sin juicios</h1>
           <p class="entrada">Soy matrona y ayudo a madres y bebés a resolver dudas y dificultades con la lactancia, en consulta o desde casa por videollamada.</p>
           <div class="acciones">
-            <a class="boton" href="reservar.html">Reservar una cita</a>
-            <a class="boton suave" href="servicios.html">Ver servicios</a>
+            <a class="boton grande" href="reservar.html">Reservar una cita</a>
+            <a class="boton grande suave" href="servicios.html">Ver servicios</a>
           </div>
         </div>
-        <div class="retrato" role="img" aria-label="Espacio reservado para una foto">
-          Aquí irá una foto cálida y cercana de la consulta o de ella.
+
+        <div class="escena">
+          <svg class="fondo" viewBox="0 0 480 540" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
+            <path d="M70 120 C60 40 190 10 290 40 C400 70 450 160 420 270 C395 370 330 440 220 450 C110 460 40 400 38 300 C36 230 78 190 70 120Z" fill="#f4cfcb" filter="url(#acuarela)" opacity=".9"/>
+            <path d="M300 330 C360 300 450 330 450 410 C450 480 380 520 320 500 C260 480 240 360 300 330Z" fill="#fbe3d3" filter="url(#acuarela)" opacity=".95"/>
+            <path d="M20 400 C10 350 60 320 100 340 C140 360 150 420 110 450 C70 480 30 450 20 400Z" fill="#cfddcb" filter="url(#acuarela)" opacity=".9"/>
+          </svg>
+          <!-- Foto principal: sustituye el contenido por <img src="foto.jpg" alt="Descripción"> -->
+          <div class="foto foto-arco" role="img" aria-label="Espacio para una foto">
+            <svg width="46" height="46" viewBox="0 0 48 48" fill="none" stroke="#b25458" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 17 H14 L18 11 H30 L34 17 H40 V38 H8 Z"/><circle cx="24" cy="27" r="7"/></svg>
+            Aquí irá una foto cálida y cercana de la consulta
+          </div>
+          <div class="foto foto-redonda" role="img" aria-label="Espacio para una segunda foto">otra foto: manos y bebé</div>
+          <div class="pegatina"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#corazon"/></svg>presencial<br>y online</div>
+          <svg class="garabato flota" width="120" height="70" viewBox="0 0 120 70" aria-hidden="true" style="left:-6px;top:36px;color:var(--crema-2);filter:drop-shadow(0 4px 6px rgba(91,63,64,.1))"><use href="#nube"/></svg>
+          <svg class="garabato flota2" width="84" height="50" viewBox="0 0 120 70" aria-hidden="true" style="right:6px;top:8px;color:var(--crema-2);filter:drop-shadow(0 4px 6px rgba(91,63,64,.1))"><use href="#nube"/></svg>
+          <svg class="garabato" width="30" height="30" viewBox="0 0 24 24" aria-hidden="true" style="right:30px;top:120px;color:var(--oro)"><use href="#chispa"/></svg>
+          <svg class="garabato" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" style="left:34px;top:230px;color:var(--rosa-fuerte)"><use href="#chispa"/></svg>
+          <svg class="garabato" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" style="right:8px;top:300px;color:var(--rosa-fuerte)"><use href="#corazon"/></svg>
+          <svg class="garabato" width="40" height="80" viewBox="0 0 40 80" aria-hidden="true" style="left:6px;bottom:6px;color:#9db898;transform:rotate(-16deg)"><use href="#ramita"/></svg>
         </div>
       </div>
     </section>
 
-    <section class="bloque alt">
+    <div class="ola" style="--de:var(--crema);--a:var(--rosa-claro)" aria-hidden="true"><svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0 34 C120 0 240 60 360 30 S600 0 720 32 S960 62 1080 30 S1320 2 1440 30 V60 H0Z"/></svg></div>
+    <section class="bloque rosa">
       <div class="wrap">
         <div class="cabecera-bloque">
+          <div class="manuscrita">tres formas de acompañarte</div>
           <h2>Cómo puedo ayudarte</h2>
           <p>Tres formatos de consulta para adaptarnos a cada momento.</p>
         </div>
         <div class="tarjetas">
           <div class="tarjeta">
+            <svg class="icono" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="34" r="27" fill="#f4cfcb" filter="url(#acuarela)"/><g fill="none" stroke="#5b3f40" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 33 L32 17 L50 33"/><path d="M18 30 V50 H46 V30"/></g><path d="M32 46 C25 41 25 35 29 35 C31 35 32 36 32 37.5 C32 36 33 35 35 35 C39 35 39 41 32 46Z" fill="#b25458"/></svg>
             <h3>Consulta presencial</h3>
             <p>Valoración tranquila de la toma, el agarre y vuestras necesidades, en consulta.</p>
-            <div class="detalle">Duración orientativa: 60 min</div>
+            <div class="pie-tarjeta"><span class="pildora">60 min · orientativo</span></div>
           </div>
           <div class="tarjeta">
+            <svg class="icono" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="34" r="27" fill="#cfddcb" filter="url(#acuarela)"/><path d="M18 46 C8 46 6 34 16 31 C16 20 30 15 36 24 C42 17 54 22 50 34 C58 36 57 46 48 46 Z" fill="#fffdf9" stroke="#5b3f40" stroke-width="2.4" stroke-linejoin="round"/><circle cx="26" cy="36" r="1.8" fill="#5b3f40"/><circle cx="38" cy="36" r="1.8" fill="#5b3f40"/><path d="M28 40 C30 43 34 43 36 40" fill="none" stroke="#5b3f40" stroke-width="2.2" stroke-linecap="round"/><circle cx="22" cy="40" r="2.6" fill="#e9a7a2" opacity=".7"/><circle cx="42" cy="40" r="2.6" fill="#e9a7a2" opacity=".7"/></svg>
             <h3>Consulta online</h3>
             <p>Videollamada desde casa, con el bebé en su entorno y sin desplazamientos.</p>
-            <div class="detalle">Duración orientativa: 45 min</div>
+            <div class="pie-tarjeta"><span class="pildora">45 min · orientativo</span></div>
           </div>
           <div class="tarjeta">
+            <svg class="icono" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="34" r="27" fill="#fbe3d3" filter="url(#acuarela)"/><g fill="none" stroke="#5b3f40" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M32 52 V30"/><path d="M32 38 C22 38 17 31 17 24 C27 24 32 30 32 38Z" fill="#bfd3bb"/><path d="M32 32 C42 32 47 25 47 18 C37 18 32 24 32 32Z" fill="#bfd3bb"/></g></svg>
             <h3>Seguimiento</h3>
             <p>Revisión corta para ver cómo ha ido tras la primera consulta y ajustar lo necesario.</p>
-            <div class="detalle">Duración orientativa: 30 min</div>
+            <div class="pie-tarjeta"><span class="pildora">30 min · orientativo</span></div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="bloque">
-      <div class="wrap estrecho">
+    <div class="ola" style="--de:var(--rosa-claro);--a:var(--crema)" aria-hidden="true"><svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0 30 C140 62 260 2 400 30 S640 62 780 30 S1040 0 1160 32 S1340 58 1440 30 V60 H0Z"/></svg></div>
+    <section class="bloque crema">
+      <div class="wrap">
         <div class="cabecera-bloque">
+          <div class="manuscrita">paso a pasito</div>
           <h2>Cómo funciona</h2>
         </div>
         <ol class="pasos">
-          <li><strong>Elige el tipo de consulta y un hueco libre</strong> en el calendario de reservas.</li>
-          <li><strong>Paga online o en la consulta</strong>, como prefieras.</li>
-          <li><strong>Recibe la confirmación</strong> por correo, con el enlace de videollamada si es online.</li>
-          <li><strong>Nos vemos</strong> y trabajamos con calma lo que os preocupa.</li>
+          <li><span class="num" aria-hidden="true">1</span><span><strong>Elige el tipo de consulta y un hueco libre</strong> en el calendario de reservas.</span></li>
+          <li><span class="num" aria-hidden="true">2</span><span><strong>Paga online o en la consulta</strong>, como prefieras.</span></li>
+          <li><span class="num" aria-hidden="true">3</span><span><strong>Recibe la confirmación</strong> por correo, con el enlace de videollamada si es online.</span></li>
+          <li><span class="num" aria-hidden="true">4</span><span><strong>Nos vemos</strong> y trabajamos con calma lo que os preocupa.</span></li>
         </ol>
       </div>
     </section>
 
-    <section class="bloque alt">
+    <div class="ola" style="--de:var(--crema);--a:var(--salvia-claro)" aria-hidden="true"><svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0 28 C160 0 300 60 460 32 S720 2 880 32 S1200 60 1440 26 V60 H0Z"/></svg></div>
+    <section class="bloque salvia">
+      <div class="wrap sobre">
+        <div class="escena">
+      <svg class="fondo" viewBox="0 0 480 440" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
+        <path d="M60 140 C50 60 150 20 240 40 C340 62 400 140 380 240 C360 340 280 400 180 390 C90 380 40 320 50 240 C54 200 64 180 60 140Z" fill="#f4cfcb" filter="url(#acuarela)" opacity=".95"/>
+        <path d="M250 270 C300 240 390 270 380 340 C370 400 300 420 250 390 C210 365 215 295 250 270Z" fill="#fbe3d3" filter="url(#acuarela)" opacity=".95"/>
+      </svg>
+      <svg viewBox="40 20 260 300" aria-hidden="true" style="position:absolute;left:2%;top:20px;width:62%" fill="none" stroke="#5b3f40" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M92 312 C90 232 110 172 160 150 C210 172 232 232 230 312 Z" fill="#efb5b1"/>
+        <path d="M148 132 L148 152 C152 162 168 162 172 152 L172 132 Z" fill="#f9dccb"/>
+        <g transform="rotate(-8 160 96)">
+          <circle cx="160" cy="96" r="33" fill="#f9dccb"/>
+          <path d="M126 96 C121 58 160 44 190 66 C199 77 197 92 195 103 C188 83 172 75 150 79 C138 83 130 89 126 96Z" fill="#7a4b43" stroke="#7a4b43"/>
+          <circle cx="178" cy="52" r="15" fill="#7a4b43" stroke="#7a4b43"/>
+          <path d="M146 102 q6 6 12 0"/><path d="M164 102 q6 6 12 0"/><path d="M156 116 q5 5 10 0"/>
+          <circle cx="143" cy="113" r="6" fill="#f4a9a3" stroke="none" opacity=".6"/>
+          <circle cx="179" cy="113" r="6" fill="#f4a9a3" stroke="none" opacity=".6"/>
+        </g>
+        <g transform="rotate(-10 170 220)">
+          <ellipse cx="176" cy="220" rx="68" ry="30" fill="#fff7ec"/>
+          <path d="M150 196 q5 24 0 48" stroke="#9db898"/><path d="M176 191 q5 29 0 58" stroke="#9db898"/><path d="M202 195 q5 25 0 50" stroke="#9db898"/>
+          <circle cx="114" cy="212" r="21" fill="#f9dccb"/>
+          <path d="M104 195 q9 -9 18 0" stroke="#7a4b43"/>
+          <path d="M104 214 q4 4 8 0"/><path d="M118 214 q4 4 8 0"/>
+          <circle cx="102" cy="222" r="4" fill="#f4a9a3" stroke="none" opacity=".7"/>
+          <circle cx="126" cy="222" r="4" fill="#f4a9a3" stroke="none" opacity=".7"/>
+        </g>
+        <path d="M94 262 C112 290 196 298 242 250 C250 266 244 286 230 298 C194 322 122 322 98 292 Z" fill="#e5a3a0"/>
+        <circle cx="240" cy="246" r="11" fill="#f9dccb"/>
+      </svg>
+      <div class="polaroid">
+        <!-- Sustituye el texto de abajo por: <img src="foto.jpg" alt="Descripción de la foto"> -->
+        <div class="foto" role="img" aria-label="Espacio para una foto">tu foto, con mucho cariño</div>
+      </div>
+      <svg class="garabato" width="28" height="28" viewBox="0 0 24 24" aria-hidden="true" style="right:40px;top:30px;color:var(--oro)"><use href="#chispa"/></svg>
+      <svg class="garabato" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" style="left:0;bottom:70px;color:var(--rosa-fuerte)"><use href="#corazon"/></svg>
+    </div>
+        <div>
+          <div class="manuscrita">sobre mí</div>
+          <h2>Hola, soy María</h2>
+          <p class="destacado">Escucho primero, observo después y propongo siempre pasos pequeños y realistas.</p>
+          <p style="margin:0 0 28px">Cada familia y cada bebé son distintos.</p>
+          <a class="boton grande" href="sobre-mi.html">Conóceme</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="ola" style="--de:var(--salvia-claro);--a:var(--crema)" aria-hidden="true"><svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0 32 C180 62 320 0 520 30 S840 60 1040 30 S1300 0 1440 32 V60 H0Z"/></svg></div>
+    <section class="bloque crema" style="padding-top:24px">
       <div class="wrap estrecho">
-        <h2>Del blog</h2>
-        <div class="lista-articulos">
-          <div class="articulo-resumen">
-            <div class="meta">Artículo de ejemplo</div>
+        <div class="cabecera-fila">
+          <h2>Del blog</h2>
+          <a href="blog.html"><strong>Ver todos los artículos →</strong></a>
+        </div>
+        <div class="articulo-resumen">
+          <div class="portadilla">
+            <svg viewBox="0 0 240 200" aria-hidden="true">
+              <path d="M40 90 C30 40 100 10 150 30 C210 52 230 120 190 160 C150 200 60 190 40 130Z" fill="#f4cfcb" filter="url(#acuarela)"/>
+              <use href="#nube" x="70" y="70" width="100" height="58" style="color:#fffdf9"/>
+              <use href="#chispa" x="178" y="40" width="26" height="26" style="color:#e3b25c"/>
+              <use href="#corazon" x="60" y="44" width="20" height="20" style="color:#b25458"/>
+            </svg>
+          </div>
+          <div class="cuerpo">
+            <div class="meta">artículo de ejemplo</div>
             <h3><a href="articulo-primeras-semanas.html">Las primeras semanas de lactancia: qué es normal y cuándo pedir ayuda</a></h3>
             <p>Un repaso tranquilo a lo que suele ocurrir al principio y a las señales por las que conviene consultar.</p>
           </div>
         </div>
-        <p><a href="blog.html">Ver todos los artículos →</a></p>
+      </div>
+    </section>
+
+    <div class="ola" style="--de:var(--crema);--a:var(--rosa)" aria-hidden="true"><svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0 34 C120 0 240 60 360 30 S600 0 720 32 S960 62 1080 30 S1320 2 1440 30 V60 H0Z"/></svg></div>
+    <section class="llamada">
+      <div class="wrap">
+        <svg class="corazon" viewBox="0 0 24 24" aria-hidden="true"><use href="#corazon"/></svg>
+        <h2>Aquí estoy para lo que necesites</h2>
+        <p>Elige un hueco en el calendario y hablamos con calma de vosotros dos.</p>
+        <a class="boton grande oscuro" href="reservar.html">Reservar una cita</a>
+        <svg class="garabato" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" style="left:4%;top:10px;color:var(--crema-2)"><use href="#chispa"/></svg>
+        <svg class="garabato" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" style="right:8%;top:70px;color:var(--crema-2)"><use href="#chispa"/></svg>
       </div>
     </section>
   </main>
-
+<div class="escalopes" aria-hidden="true"><svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0 0 H1440 V30 C1380 60 1320 60 1260 30 C1200 60 1140 60 1080 30 C1020 60 960 60 900 30 C840 60 780 60 720 30 C660 60 600 60 540 30 C480 60 420 60 360 30 C300 60 240 60 180 30 C120 60 60 60 0 30Z" fill="#f4cfcb"/><path d="M0 30 C60 60 120 60 180 30 C240 60 300 60 360 30 C420 60 480 60 540 30 C600 60 660 60 720 30 C780 60 840 60 900 30 C960 60 1020 60 1080 30 C1140 60 1200 60 1260 30 C1320 60 1380 60 1440 30 V60 H0Z" fill="#5b3f40"/></svg></div>
   <footer class="sitio">
     <div class="wrap">
       <div class="columnas">
         <div>
-          <h3>NOMBRE APELLIDO</h3>
-          <p>Matrona · Consultas de lactancia<br>Nº de colegiada: NUMERO</p>
+          <div class="nombre">Breasties <span>· The best of the breast</span></div>
+          <p>María Izquierdo, matrona<br>Consultas de lactancia<br>Nº de colegiada: NUMERO</p>
         </div>
         <div>
-          <h3>Contacto</h3>
+          <div class="titulo">contacto</div>
           <p>EMAIL<br>TELEFONO<br>DIRECCION, CIUDAD</p>
         </div>
         <div>
-          <h3>Legal</h3>
+          <div class="titulo">legal</div>
           <p><a href="aviso-legal.html">Aviso legal</a><br><a href="aviso-legal.html#privacidad">Política de privacidad</a><br><a href="aviso-legal.html#cookies">Cookies</a></p>
         </div>
       </div>
-      <div class="copia">© 2026 NOMBRE APELLIDO. Contenido informativo: no sustituye una consulta sanitaria individual.</div>
+      <div class="copia">© 2026 Breasties · María Izquierdo. Contenido informativo: no sustituye una consulta sanitaria individual.</div>
     </div>
   </footer>
 </body>
