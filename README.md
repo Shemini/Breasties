@@ -8,7 +8,10 @@ Web estática (HTML y CSS, sin instalar nada) para probar el diseño y publicarl
 
 - `index.html`: inicio
 - `servicios.html`: servicios, tarifas y preguntas frecuentes
-- `reservar.html`: reserva de citas (Cal.com incrustado)
+- `reservar.html`: calculadora de precio y reserva de citas (Cal.com incrustado)
+- `contacto.html`: WhatsApp y correo
+- `config.js`: usuario de Cal.com, WhatsApp y correo
+- `reservas.js` y `zonas.js`: lógica de precios y zonas (tiempos en coche desde Guzmán el Bueno)
 - `sobre-mi.html`: presentación
 - `blog.html` y `articulo-primeras-semanas.html`: blog y un artículo de ejemplo
 - `aviso-legal.html`: borrador de aviso legal, privacidad y cookies
@@ -42,17 +45,39 @@ Busca estas palabras en todos los archivos (en un editor de texto, con "Buscar e
 | `EMAIL`, `TELEFONO`, `DIRECCION, CIUDAD` | Datos de contacto |
 | `NUMERO` | Número de colegiada |
 | `NIF`, `COLEGIO` | Datos del aviso legal |
-| `TU-USUARIO` | Tu usuario de Cal.com (en `reservar.html`) |
-| `XX €` | Precios reales |
+| `TU-USUARIO` | Tu usuario de Cal.com (en `config.js` y en el enlace de seguimiento de destete en `reservar.html`) |
+| `34600000000`, `EMAIL` | WhatsApp y correo (en `config.js`) |
 
 También hay que reemplazar los textos de ejemplo y añadir fotos: en los marcos de foto (clase `foto`) borra el texto y pon `<img src="tu-foto.jpg" alt="descripción">`; la imagen se recorta sola a la forma del marco.
 
-## Citas con Cal.com
+## Citas con Cal.com (Google Calendar)
 
-1. Crea una cuenta gratuita en cal.com.
-2. En Ajustes > Calendarios, conecta Apple Calendar con una contraseña específica de aplicación (se genera en appleid.apple.com).
-3. Crea tus tipos de cita (presencial, online, seguimiento) y conecta Stripe para los cobros.
-4. En `reservar.html`, cambia `TU-USUARIO` por tu usuario.
+Pago en efectivo o Bizum; las facturas las gestionáis vosotros. Sin Stripe por ahora.
+
+1. Crea una cuenta gratuita en cal.com y conecta **Google Calendar** (Ajustes > Calendarios).
+2. Crea dos horarios: **Consultas** (10:00-14:00 y 16:00-18:00, lunes a viernes, ajusta los días) y **Pack** (10:00-14:30 y 16:00-18:00).
+3. Crea estos tipos de evento (el nombre corto del enlace debe ser exactamente este):
+
+| Enlace | Horario | Duraciones | Margen antes/después |
+|---|---|---|---|
+| `cita-online` | Consultas | 15 a 240 min, de 15 en 15 | 60 min |
+| `cita-presencial` | Consultas | 15 a 240 min, de 15 en 15 | 60 min |
+| `cita-presencial-lejos` | Consultas | 15 a 240 min, de 15 en 15 | 90 min |
+| `pack-preparacion` | Pack | 270 min fijos | 60 min |
+| `pack-preparacion-lejos` | Pack | 270 min fijos | 90 min |
+| `seguimiento-destete` | Consultas | 15 min | 60 min |
+
+4. En todos: reservas hasta 30 días vista, aviso mínimo de 24 h, intervalo de huecos de 15 min. Ubicación: Google Meet en los online; "dirección del asistente" en los presenciales. Añade un campo de dirección y teléfono. En el texto de confirmación indica pago en efectivo o Bizum.
+5. Pon tu usuario en `config.js`.
+
+Las reservas urgentes (menos de 24 h, +20 €) se piden por WhatsApp.
+
+### Cosas por comprobar en tu cuenta de Cal.com
+
+- Que el enlace con `?duration=` preseleccione la duración.
+- Que acepte márgenes de 60 y 90 min y huecos de 15 min en el plan gratuito.
+- Cómo se comportan los márgenes entre citas de distinto tipo (presencial normal y lejos).
+- Que el calendario se vea incrustado; si no, el botón "Ábrelo en otra pestaña" sirve igual.
 
 ## Cambiar los colores
 

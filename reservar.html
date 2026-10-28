@@ -41,6 +41,7 @@
           <li><a href="servicios.html">Servicios</a></li>
           <li><a href="sobre-mi.html">Sobre mí</a></li>
           <li><a href="blog.html">Blog</a></li>
+          <li><a href="contacto.html">Contacto</a></li>
           <li><a class="boton" href="reservar.html" aria-current="page">Reservar cita</a></li>
         </ul>
       </nav>
@@ -54,22 +55,58 @@
         <div class="cabecera-bloque">
           <div class="manuscrita">un huequito para vosotros</div>
           <h1>Reservar cita</h1>
-          <p>Elige el tipo de consulta y un hueco libre. Recibirás la confirmación por correo.</p>
+          <p>Elige cómo y qué necesitas, mira el precio y escoge un hueco libre. Recibirás la confirmación por correo.</p>
         </div>
 
-        <div class="aviso">
-          <strong>Es una maqueta.</strong> El calendario de abajo es un marcador de posición. Cuando crees tu cuenta en Cal.com, sustituye <code>TU-USUARIO</code> por tu nombre de usuario en las dos direcciones de esta página (el botón y el <code>iframe</code>) y verás tu calendario real.
+        <div class="aviso" id="aviso-prueba" hidden>
+          <strong>Modo prueba.</strong> Falta poner tu usuario de Cal.com en <code>config.js</code> (<code>calUsuario</code>). Mientras tanto el calendario es un marcador de posición.
+        </div>
+        <noscript><p class="error">Esta página necesita JavaScript para calcular el precio. Puedes reservar escribiéndonos por <a href="contacto.html">contacto</a>.</p></noscript>
+
+        <form id="form-reserva" class="calc" autocomplete="off">
+          <fieldset>
+            <legend>1. ¿Cómo prefieres la consulta?</legend>
+            <div class="modalidades">
+              <label><input type="radio" name="modalidad" value="presencial" checked><span><strong>Presencial</strong><small>En tu casa, en la Comunidad de Madrid</small></span></label>
+              <label><input type="radio" name="modalidad" value="online"><span><strong>Online</strong><small>Por videollamada, desde donde estés</small></span></label>
+            </div>
+          </fieldset>
+
+          <fieldset id="bloque-zona">
+            <legend>2. ¿Dónde estás?</legend>
+            <label for="zona" class="nota" style="display:block;margin:0 0 8px">Elige tu zona para calcular el suplemento por desplazamiento.</label>
+            <select id="zona" name="zona"></select>
+          </fieldset>
+
+          <fieldset>
+            <legend>3. ¿Qué necesitas?</legend>
+            <p class="nota" style="margin-top:0">Puedes juntar varios servicios en una sola cita: se suman los tiempos y, si es presencial, ahorras 20&nbsp;€.</p>
+            <div id="lista-servicios"></div>
+          </fieldset>
+
+          <div class="resumen-caja" aria-live="polite">
+            <h2>Tu cita</h2>
+            <div id="resumen"><p class="vacio">Elige al menos un servicio.</p></div>
+          </div>
+
+          <p style="text-align:center"><button class="boton" type="submit" id="boton-ver" disabled>Ver huecos disponibles</button></p>
+        </form>
+
+        <div id="resultado-calendario" hidden>
+          <div id="banner-duracion"></div>
+          <div class="reserva-marco">
+            <iframe id="marco-calendario" title="Calendario de reservas" loading="lazy"></iframe>
+          </div>
+          <p class="nota">¿No se ve el calendario? <a id="abrir-calendario" href="#" target="_blank" rel="noopener">Ábrelo en otra pestaña</a>.</p>
         </div>
 
-        <p><a class="boton" href="https://cal.com/TU-USUARIO" target="_blank" rel="noopener">Abrir el calendario en otra pestaña</a></p>
+        <h2 style="margin-top:48px">Otras reservas</h2>
+        <ul>
+          <li><strong>Seguimiento del plan de destete</strong> (15&nbsp;min online, 20&nbsp;€): <a href="https://cal.com/TU-USUARIO/seguimiento-destete" target="_blank" rel="noopener">reservar seguimiento</a>.</li>
+          <li><strong>¿Es urgente (en menos de 24&nbsp;h)?</strong> Escríbenos por <a id="whatsapp-urgente" href="contacto.html" target="_blank" rel="noopener">WhatsApp</a>. Suplemento de 20&nbsp;€.</li>
+        </ul>
 
-        <div class="reserva-marco">
-          <iframe src="https://cal.com/TU-USUARIO" title="Calendario de reservas" loading="lazy"></iframe>
-        </div>
-
-        <p style="margin-top:24px;font-size:.95rem;color:var(--tinta-suave)">
-          Al reservar aceptas el tratamiento de tus datos según la <a href="aviso-legal.html#privacidad">política de privacidad</a>. Por favor, no escribas información clínica detallada en el formulario: la veremos juntas en la consulta.
-        </p>
+        <p class="nota">Pago en efectivo o Bizum en la consulta. Al reservar aceptas el tratamiento de tus datos según la <a href="aviso-legal.html#privacidad">política de privacidad</a>. Por favor, no escribas información clínica detallada en el formulario: la veremos juntas en la consulta.</p>
       </div>
     </section>
   </main>
@@ -93,5 +130,8 @@
       <div class="copia">© 2026 Breasties · María Izquierdo. Contenido informativo: no sustituye una consulta sanitaria individual.</div>
     </div>
   </footer>
+  <script src="config.js"></script>
+  <script src="zonas.js"></script>
+  <script src="reservas.js"></script>
 </body>
 </html>
