@@ -11,7 +11,9 @@ Web estática (HTML y CSS, sin instalar nada) para probar el diseño y publicarl
 - `reservar.html`: calculadora de precio y reserva de citas (Cal.com incrustado)
 - `contacto.html`: WhatsApp y correo
 - `config.js`: usuario de Cal.com, WhatsApp y correo
-- `reservas.js` y `zonas.js`: lógica de precios y zonas (tiempos en coche desde Guzmán el Bueno)
+- `reservas.js`: servicios, precios y la reserva paso a paso
+- `cp.js`: código postal → zona y suplemento (para cambiar un suplemento, edita su número)
+- `zonas.js`: tiempos en coche desde Guzmán el Bueno usados para calcular `cp.js`
 - `sobre-mi.html`: presentación
 - `blog.html` y `articulo-primeras-semanas.html`: blog y un artículo de ejemplo
 - `aviso-legal.html`: borrador de aviso legal, privacidad y cookies
@@ -68,7 +70,7 @@ Pago en efectivo o Bizum; las facturas las gestionáis vosotros. Sin Stripe por 
 | `seguimiento-destete` | Consultas | 15 min | 60 min |
 
 4. En todos: reservas hasta 30 días vista, aviso mínimo de 24 h, intervalo de huecos de 15 min. Ubicación: Google Meet en los online; "dirección del asistente" en los presenciales. Añade un campo de dirección y teléfono. En el texto de confirmación indica pago en efectivo o Bizum.
-5. Pon tu usuario en `config.js`.
+5. Pon tu usuario en `config.js`. Mientras siga `TU-USUARIO`, el último paso de la reserva ofrece pedir cita por WhatsApp o correo con el resumen (así no sale la página 404 de Cal.com).
 
 Las reservas urgentes (menos de 24 h, +20 €) se piden por WhatsApp.
 

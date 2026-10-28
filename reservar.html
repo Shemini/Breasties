@@ -55,54 +55,95 @@
         <div class="cabecera-bloque">
           <div class="manuscrita">un huequito para vosotros</div>
           <h1>Reservar cita</h1>
-          <p>Elige cómo y qué necesitas, mira el precio y escoge un hueco libre. Recibirás la confirmación por correo.</p>
+          <p>En cuatro pasos sencillos: qué necesitas, cómo, dónde y cuándo.</p>
         </div>
 
-        <div class="aviso" id="aviso-prueba" hidden>
-          <strong>Modo prueba.</strong> Falta poner tu usuario de Cal.com en <code>config.js</code> (<code>calUsuario</code>). Mientras tanto el calendario es un marcador de posición.
-        </div>
-        <noscript><p class="error">Esta página necesita JavaScript para calcular el precio. Puedes reservar escribiéndonos por <a href="contacto.html">contacto</a>.</p></noscript>
+        <noscript><p class="error">Esta página necesita JavaScript. Puedes pedir cita desde <a href="contacto.html">contacto</a>.</p></noscript>
 
-        <form id="form-reserva" class="calc" autocomplete="off">
-          <fieldset>
-            <legend>1. ¿Cómo prefieres la consulta?</legend>
-            <div class="modalidades">
-              <label><input type="radio" name="modalidad" value="presencial" checked><span><strong>Presencial</strong><small>En tu casa, en la Comunidad de Madrid</small></span></label>
-              <label><input type="radio" name="modalidad" value="online"><span><strong>Online</strong><small>Por videollamada, desde donde estés</small></span></label>
-            </div>
-          </fieldset>
+        <form id="reserva" novalidate>
+          <ol class="pasos-progreso" aria-label="Pasos de la reserva">
+            <li data-paso="1"><span class="bola">1</span><span class="txt">Servicio</span></li>
+            <li data-paso="2"><span class="bola">2</span><span class="txt">Modalidad</span></li>
+            <li data-paso="3"><span class="bola">3</span><span class="txt">Lugar</span></li>
+            <li data-paso="4"><span class="bola">4</span><span class="txt">Nota</span></li>
+            <li data-paso="5"><span class="bola">5</span><span class="txt">Día y hora</span></li>
+          </ol>
 
-          <fieldset id="bloque-zona">
-            <legend>2. ¿Dónde estás?</legend>
-            <label for="zona" class="nota" style="display:block;margin:0 0 8px">Elige tu zona para calcular el suplemento por desplazamiento.</label>
-            <select id="zona" name="zona"></select>
-          </fieldset>
-
-          <fieldset>
-            <legend>3. ¿Qué necesitas?</legend>
-            <p class="nota" style="margin-top:0">Puedes juntar varios servicios en una sola cita: se suman los tiempos y, si es presencial, ahorras 20&nbsp;€.</p>
+          <section class="paso" id="paso-1" aria-labelledby="t1">
+            <h2 id="t1">¿Qué servicio te interesa?</h2>
+            <p class="sub">Puedes marcar varios.</p>
+            <p class="consejo"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#corazon"/></svg><span>Si eliges consulta presencial, juntar varios servicios en una misma visita ahorra gastos de desplazamiento.</span></p>
             <div id="lista-servicios"></div>
-          </fieldset>
+            <p class="error" id="aviso-paso1" aria-live="polite"></p>
+            <div class="paso-botones">
+              <button class="boton grande" type="button" id="continuar-1" data-ir="siguiente" disabled>Continuar</button>
+            </div>
+          </section>
 
-          <div class="resumen-caja" aria-live="polite">
-            <h2>Tu cita</h2>
-            <div id="resumen"><p class="vacio">Elige al menos un servicio.</p></div>
-          </div>
+          <section class="paso" id="paso-2" aria-labelledby="t2" hidden>
+            <h2 id="t2">¿Presencial u online?</h2>
+            <p class="sub">Precio para los servicios que has elegido.</p>
+            <div class="elecciones" role="radiogroup" aria-labelledby="t2">
+              <label class="eleccion"><input type="radio" name="modalidad" value="presencial" id="mod-presencial"><span class="eleccion-caja"><span class="marca-eleccion"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 L6.5 12 L13 4.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="eleccion-texto"><span class="eleccion-titulo">Presencial</span><span class="eleccion-precio" id="precio-presencial"></span><span class="eleccion-nota" id="nota-presencial"></span></span></span></label>
+              <label class="eleccion"><input type="radio" name="modalidad" value="online" id="mod-online"><span class="eleccion-caja"><span class="marca-eleccion"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 L6.5 12 L13 4.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="eleccion-texto"><span class="eleccion-titulo">Online</span><span class="eleccion-precio" id="precio-online"></span><span class="eleccion-nota">Por videollamada, desde donde estés</span></span></span></label>
+            </div>
+            <div class="paso-botones">
+              <button class="enlace-atras" type="button" data-ir="atras">← Atrás</button>
+              <button class="boton grande" type="button" id="continuar-2" data-ir="siguiente" disabled>Continuar</button>
+            </div>
+          </section>
 
-          <p style="text-align:center"><button class="boton" type="submit" id="boton-ver" disabled>Ver huecos disponibles</button></p>
+          <section class="paso" id="paso-3" aria-labelledby="t3" hidden>
+            <h2 id="t3">¿Dónde sería la consulta?</h2>
+            <p class="sub">Escribe el código postal de tu casa.</p>
+            <label class="visual-oculto" for="cp">Código postal</label>
+            <input class="campo-texto campo-cp" id="cp" inputmode="numeric" autocomplete="postal-code" maxlength="5" placeholder="28003">
+            <div class="resultado-cp" id="resultado-cp" aria-live="polite"></div>
+            <p style="text-align:center;margin:12px 0 0"><button class="boton suave" type="button" id="pasar-online" hidden>Hacerla online</button></p>
+            <p class="consejo durazno" style="margin-top:22px"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#corazon"/></svg><span>Dependiendo de la ubicación, es posible que la consulta presencial no esté disponible.</span></p>
+            <div class="paso-botones">
+              <button class="enlace-atras" type="button" data-ir="atras">← Atrás</button>
+              <button class="boton grande" type="button" id="continuar-3" data-ir="siguiente" disabled>Continuar</button>
+            </div>
+          </section>
+
+          <section class="paso" id="paso-4" aria-labelledby="t4" hidden>
+            <h2 id="t4">¿Algo que deba saber antes de la consulta?</h2>
+            <p class="sub">Cuéntame en pocas palabras qué os trae. Hablaremos antes de la cita, así que no hace falta entrar en detalles.</p>
+            <label class="visual-oculto" for="nota">Nota para María</label>
+            <textarea class="campo-texto" id="nota" maxlength="400" placeholder="Por ejemplo: bebé de 3 semanas, dudas con el agarre."></textarea>
+            <p class="contador" id="contador-nota">0 / 400</p>
+            <div class="paso-botones">
+              <button class="enlace-atras" type="button" data-ir="atras">← Atrás</button>
+              <button class="boton grande" type="button" data-ir="siguiente">Ver resumen</button>
+            </div>
+          </section>
+
+          <section class="paso" id="paso-5" aria-labelledby="t5" hidden>
+            <h2 id="t5">Elige día y hora</h2>
+            <div class="resumen-caja" id="resumen"></div>
+            <div id="bloque-calendario" hidden>
+              <p class="banner-duracion" id="banner-duracion"></p>
+              <div class="reserva-marco"><iframe id="marco-calendario" title="Calendario de reservas" loading="lazy"></iframe></div>
+              <p class="nota">¿No se ve el calendario? <a id="abrir-calendario" href="#" target="_blank" rel="noopener">Ábrelo en otra pestaña</a>.</p>
+            </div>
+            <div class="sin-calendario" id="sin-calendario" hidden>
+              <h3>La agenda online estará lista muy pronto</h3>
+              <p>Mientras tanto, mándanos este resumen y te proponemos huecos.</p>
+              <div class="contacto-botones" style="margin:16px 0 0">
+                <a class="boton" id="pedir-whatsapp" href="#" target="_blank" rel="noopener">Pedir cita por WhatsApp</a>
+                <a class="boton suave" id="pedir-email" href="#">Por correo</a>
+              </div>
+            </div>
+            <div class="paso-botones">
+              <button class="enlace-atras" type="button" data-ir="atras">← Atrás</button>
+            </div>
+          </section>
         </form>
-
-        <div id="resultado-calendario" hidden>
-          <div id="banner-duracion"></div>
-          <div class="reserva-marco">
-            <iframe id="marco-calendario" title="Calendario de reservas" loading="lazy"></iframe>
-          </div>
-          <p class="nota">¿No se ve el calendario? <a id="abrir-calendario" href="#" target="_blank" rel="noopener">Ábrelo en otra pestaña</a>.</p>
-        </div>
 
         <h2 style="margin-top:48px">Otras reservas</h2>
         <ul>
-          <li><strong>Seguimiento del plan de destete</strong> (15&nbsp;min online, 20&nbsp;€): <a href="https://cal.com/TU-USUARIO/seguimiento-destete" target="_blank" rel="noopener">reservar seguimiento</a>.</li>
+          <li><strong>Seguimiento del plan de destete</strong> (15&nbsp;min online, 20&nbsp;€): <a id="enlace-destete" href="contacto.html" target="_blank" rel="noopener">reservar seguimiento</a>.</li>
           <li><strong>¿Es urgente (en menos de 24&nbsp;h)?</strong> Escríbenos por <a id="whatsapp-urgente" href="contacto.html" target="_blank" rel="noopener">WhatsApp</a>. Suplemento de 20&nbsp;€.</li>
         </ul>
 
@@ -131,7 +172,7 @@
     </div>
   </footer>
   <script src="config.js"></script>
-  <script src="zonas.js"></script>
+  <script src="cp.js"></script>
   <script src="reservas.js"></script>
 </body>
 </html>

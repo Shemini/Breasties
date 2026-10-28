@@ -24,9 +24,9 @@
     { id: "seguimiento", grupo: "Lactancia", nombre: "Seguimiento de lactancia",
       min: 60, duraciones: [30, 45, 60], precio: { presencial: 60, online: 30 },
       detalle: "Revisión de entre 30 y 60 minutos." },
-    { id: "destete", grupo: "Lactancia", nombre: "Plan de destete (primera consulta)",
+    { id: "destete", grupo: "Lactancia", nombre: "Plan de destete",
       min: 120, precio: { presencial: 100, online: 60 },
-      detalle: "Primera consulta de 2 horas. Los seguimientos son online (15 min, 20 € cada uno)." },
+      detalle: "Primera consulta de 2 horas y, después, seguimientos online cortos." },
     { id: "prepLactancia", grupo: "Pre-parto", nombre: "Prepara tu lactancia",
       min: 120, precio: { presencial: 80, online: 50 },
       detalle: "Taller individual de 2 horas." },
@@ -35,14 +35,14 @@
       detalle: "Sesión individual de 2 horas." },
     { id: "porteo", grupo: "Pre-parto", nombre: "Asesoría de porteo",
       min: 30, precio: { presencial: 50, online: null },
-      detalle: "30 minutos. Solo en persona." }
+      detalle: "Cómo portear con seguridad y comodidad. 30 minutos." }
   ];
 
   var PACK = {
     id: "pack", nombre: "Pack de preparación a la maternidad",
     min: 270, precio: { presencial: 150, online: null },
     incluye: ["prepLactancia", "prepParto", "porteo"],
-    detalle: "Prepara tu lactancia + Preparación del parto + Asesoría de porteo. 4 h 30 min, solo en persona."
+    detalle: "Prepara tu lactancia, Preparación del parto y Asesoría de porteo en una sola visita de 4 h 30 min."
   };
 
   function buscar(id) {
@@ -109,9 +109,9 @@
     var suplemento = 0;
     if (pres) {
       if (estado.suplemento === undefined) {
-        errores.push("Elige tu municipio o distrito.");
+        errores.push("Escribe tu código postal.");
       } else if (estado.suplemento === null) {
-        errores.push("Desde tu zona solo ofrecemos consulta online.");
+        errores.push("En tu zona solo podemos hacer la consulta online.");
       } else {
         suplemento = estado.suplemento;
       }
@@ -160,7 +160,7 @@
     };
   }
 
-  function notasReserva(res) {
+  function notasReserva(res, extra) {
     var nombres = res.lineas.map(function (l) { return l.nombre; }).join("; ");
     var lineas = [
       "Servicios: " + nombres,
@@ -168,221 +168,313 @@
       "Duración reservada: " + fmtDuracion(res.minutos),
       "Precio estimado: " + fmtEuros(res.total) + " (pago en efectivo o Bizum)"
     ];
+    if (extra && extra.cp) lineas.splice(2, 0, "Código postal: " + extra.cp);
+    if (extra && extra.nota) lineas.push("Nota: " + extra.nota);
     return lineas.join("\n");
   }
 
-  function urlReserva(res, cfg) {
+  function urlReserva(res, cfg, extra) {
     var base = "https://cal.com/" + cfg.calUsuario + "/" + res.evento;
     var p = new URLSearchParams();
     if (res.duracionParam) p.set("duration", String(res.duracionParam));
     p.set("layout", "month_view");
-    p.set("notes", notasReserva(res));
+    p.set("notes", notasReserva(res, extra));
     return base + "?" + p.toString();
   }
 
+  function calConfigurado(cfg) {
+    return !!(cfg && cfg.calUsuario && cfg.calUsuario !== "TU-USUARIO");
+  }
+
   return {
+    calConfigurado: calConfigurado,
     SERVICIOS: SERVICIOS, PACK: PACK, DESCUENTO_COMBO: DESCUENTO_COMBO,
     calcular: calcular, urlReserva: urlReserva, notasReserva: notasReserva,
     fmtEuros: fmtEuros, fmtDuracion: fmtDuracion
   };
 }));
 
+
 /* ---------------------------------------------------------------------
-   Interfaz de la página de reservas (solo se ejecuta en el navegador)
+   Reserva paso a paso (solo se ejecuta en el navegador)
+   1 Servicios · 2 Modalidad · 3 Código postal · 4 Nota · 5 Resumen y calendario
    --------------------------------------------------------------------- */
 (function () {
   if (typeof document === "undefined") return;
   var R = window.Reservas;
   var cfg = window.CONFIG || { calUsuario: "TU-USUARIO", whatsapp: "", email: "" };
-  var form = document.getElementById("form-reserva");
-  if (!form) return;
+  var CP = window.CODIGOS_POSTALES || {};
+  var raiz = document.getElementById("reserva");
+  if (!raiz) return;
 
-  function el(tag, attrs, children) {
+  var CHECK = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 L6.5 12 L13 4.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  function $(id) { return document.getElementById(id); }
+  function el(tag, attrs, hijos) {
     var e = document.createElement(tag);
     Object.keys(attrs || {}).forEach(function (k) {
       if (k === "text") e.textContent = attrs[k];
+      else if (k === "html") e.innerHTML = attrs[k];
       else e.setAttribute(k, attrs[k]);
     });
-    (children || []).forEach(function (c) { e.appendChild(c); });
+    (hijos || []).forEach(function (c) { if (c) e.appendChild(c); });
     return e;
   }
 
-  // --- Zonas ---
-  var zonas = (window.ZONAS || []).slice();
-  var selZona = document.getElementById("zona");
-  var grpMadrid = el("optgroup", { label: "Madrid capital (distritos)" });
-  var grpOtros = el("optgroup", { label: "Otros municipios de la Comunidad de Madrid" });
-  zonas.forEach(function (z, i) {
-    var etiqueta = z.n + (z.s === null ? " (solo online)" : "");
-    var op = el("option", { value: String(i), text: etiqueta });
-    (z.n.indexOf("Madrid · ") === 0 ? grpMadrid : grpOtros).appendChild(op);
-  });
-  selZona.appendChild(grpMadrid);
-  selZona.appendChild(grpOtros);
+  var estado = { ids: [], pack: false, durSeg: 60, modalidad: null, cp: "", zona: null, nota: "" };
+  var pasoActual = 1;
 
-  // --- Servicios ---
-  var lista = document.getElementById("lista-servicios");
-  var grupoActual = null;
-  var contenedor = null;
-
-  function tarjetaServicio(s, esPack) {
-    var id = "srv-" + s.id;
-    var precios = [];
-    if (s.precio.presencial !== null) precios.push("En persona " + R.fmtEuros(s.precio.presencial));
-    if (s.precio.online !== null) precios.push("Online " + R.fmtEuros(s.precio.online));
-    var cuerpo = [
-      el("span", { class: "opcion-titulo", text: s.nombre }),
-      el("span", { class: "opcion-detalle", text: s.detalle }),
-      el("span", { class: "opcion-precios", text: precios.join(" · ") })
-    ];
-    var cb = el("input", { type: "checkbox", id: id, name: esPack ? "pack" : "servicio", value: s.id });
-    var label = el("label", { class: "opcion", for: id }, [cb, el("span", { class: "opcion-texto" }, cuerpo)]);
-    var envoltorio = el("div", { class: "opcion-fila" }, [label]);
-    if (s.duraciones) {
-      var sel = el("select", { id: "dur-" + s.id, "aria-label": "Duración del seguimiento", class: "dur" });
-      s.duraciones.forEach(function (d) {
-        var op = el("option", { value: String(d), text: R.fmtDuracion(d) });
-        if (d === s.min) op.selected = true;
-        sel.appendChild(op);
-      });
-      envoltorio.appendChild(sel);
-    }
-    return envoltorio;
+  function soloPresencial() {
+    return estado.pack || estado.ids.indexOf("porteo") !== -1;
   }
-
-  R.SERVICIOS.forEach(function (s) {
-    if (s.grupo !== grupoActual) {
-      grupoActual = s.grupo;
-      contenedor = el("div", { class: "grupo-servicios" }, [el("h3", { text: s.grupo })]);
-      lista.appendChild(contenedor);
-    }
-    contenedor.appendChild(tarjetaServicio(s, false));
-  });
-  var grupoPack = el("div", { class: "grupo-servicios" }, [el("h3", { text: "Pack" }), tarjetaServicio(R.PACK, true)]);
-  lista.appendChild(grupoPack);
-
-  // --- Estado ---
-  function leerEstado() {
-    var modalidad = form.querySelector('input[name="modalidad"]:checked').value;
-    var iz = selZona.value;
-    var zona = iz === "" ? null : zonas[Number(iz)];
-    var packMarcado = document.getElementById("srv-pack").checked;
-    var ids = Array.prototype.map.call(form.querySelectorAll('input[name="servicio"]:checked'), function (c) { return c.value; });
-    var sd = document.getElementById("dur-seguimiento");
+  function minutosElegidos() {
+    if (estado.pack) return R.PACK.min;
+    return estado.ids.reduce(function (t, id) {
+      if (id === "seguimiento") return t + estado.durSeg;
+      return t + R.SERVICIOS.filter(function (s) { return s.id === id; })[0].min;
+    }, 0);
+  }
+  function estadoCalculo(modalidad, suplemento) {
     return {
-      modalidad: modalidad,
-      suplemento: zona ? zona.s : undefined,
-      zona: zona ? zona.n.replace("Madrid · ", "Madrid, ") : "",
-      pack: packMarcado,
-      ids: ids,
-      duraciones: { seguimiento: sd ? Number(sd.value) : 60 }
+      modalidad: modalidad, suplemento: suplemento,
+      zona: estado.zona ? estado.zona[0] : "",
+      pack: estado.pack, ids: estado.ids.slice(),
+      duraciones: { seguimiento: estado.durSeg }
     };
   }
-
-  var resumen = document.getElementById("resumen");
-  var zonaBloque = document.getElementById("bloque-zona");
-  var botonVer = document.getElementById("boton-ver");
-  var resultado = document.getElementById("resultado-calendario");
-
-  function actualizar(e) {
-    var origen = e && e.target;
-    var cbPack = document.getElementById("srv-pack");
-    // El pack es incompatible con el resto de servicios sueltos
-    if (origen === cbPack && cbPack.checked) {
-      form.querySelectorAll('input[name="servicio"]').forEach(function (c) { c.checked = false; });
-    } else if (origen && origen.name === "servicio" && origen.checked) {
-      cbPack.checked = false;
-    }
-
-    var estado = leerEstado();
-    var pres = estado.modalidad === "presencial";
-    zonaBloque.hidden = !pres;
-
-    // Servicios que solo existen en persona se desactivan en online
-    [buscarSrv("porteo"), R.PACK].forEach(function (s) {
-      var c = document.getElementById("srv-" + s.id);
-      var fila = c.closest(".opcion-fila");
-      c.disabled = !pres;
-      if (!pres) c.checked = false;
-      fila.classList.toggle("desactivada", !pres);
-    });
-    form.querySelectorAll('input[name="servicio"], input[name="pack"]').forEach(function (c) {
-      var fila = c.closest(".opcion-fila");
-      var d = fila.querySelector(".dur");
-      if (d) d.hidden = !c.checked;
-    });
-
-    estado = leerEstado();
-    var res = R.calcular(estado);
-    pintarResumen(res, estado);
-    botonVer.disabled = !res.ok;
-    resultado.hidden = true;
+  function pasosVisibles() {
+    var p = [1];
+    if (!soloPresencial()) p.push(2);
+    if (estado.modalidad !== "online") p.push(3);
+    p.push(4, 5);
+    return p;
   }
 
-  function buscarSrv(id) {
-    return R.SERVICIOS.filter(function (s) { return s.id === id; })[0];
-  }
-
-  function pintarResumen(res, estado) {
-    resumen.textContent = "";
-    var hayLineas = res.lineas.length > 0;
-    if (hayLineas) {
-      var tabla = el("table", { class: "resumen-tabla" });
-      res.lineas.forEach(function (l) {
-        tabla.appendChild(el("tr", {}, [
-          el("td", { text: l.nombre + " (" + R.fmtDuracion(l.minutos) + ")" }),
-          el("td", { class: "der", text: R.fmtEuros(l.precio) })
-        ]));
+  // ---------- Paso 1: servicios ----------
+  function tarjeta(s, esPack) {
+    var id = "srv-" + s.id;
+    var input = el("input", { type: "checkbox", id: id, value: s.id, name: esPack ? "pack" : "servicio" });
+    var etiquetas = [el("span", { class: "etiqueta", text: R.fmtDuracion(s.duraciones ? s.duraciones[0] : s.min) + (s.duraciones ? " a " + R.fmtDuracion(s.duraciones[s.duraciones.length - 1]) : "") })];
+    if (s.precio.online === null) etiquetas.push(el("span", { class: "etiqueta durazno", text: "Solo presencial" }));
+    var texto = el("span", { class: "eleccion-texto" }, [
+      el("span", { class: "eleccion-titulo", text: s.nombre }),
+      el("span", { class: "eleccion-detalle", text: s.detalle }),
+      el("span", { class: "etiquetas" }, etiquetas)
+    ]);
+    if (s.duraciones) {
+      var durs = el("span", { class: "duraciones", id: "duraciones-" + s.id, role: "radiogroup", "aria-label": "¿Cuánto tiempo necesitas?" });
+      durs.hidden = true;
+      s.duraciones.forEach(function (d) {
+        var r = el("input", { type: "radio", name: "dur-" + s.id, value: String(d) });
+        if (d === s.min) r.checked = true;
+        durs.appendChild(el("label", { class: "duracion" }, [r, el("span", { text: R.fmtDuracion(d) })]));
       });
-      if (res.suplemento > 0) {
-        tabla.appendChild(el("tr", {}, [el("td", { text: "Desplazamiento a " + (estado.zona || "tu zona") }), el("td", { class: "der", text: "+ " + R.fmtEuros(res.suplemento) })]));
-      }
-      if (res.descuento > 0) {
-        tabla.appendChild(el("tr", {}, [el("td", { text: "Descuento por juntar servicios en una visita" }), el("td", { class: "der", text: "− " + R.fmtEuros(res.descuento) })]));
-      }
-      tabla.appendChild(el("tr", { class: "total" }, [
-        el("td", { text: "Total estimado · " + R.fmtDuracion(res.minutos) }),
-        el("td", { class: "der", text: R.fmtEuros(res.total) })
-      ]));
-      resumen.appendChild(tabla);
-      if (res.solo_manana) resumen.appendChild(el("p", { class: "nota", text: "Por su duración, solo habrá huecos por la mañana." }));
-      if (res.sugerenciaPack && res.sugerenciaPack.ahorro > 0) {
-        resumen.appendChild(el("p", { class: "nota destacada", text: "Con el pack de preparación a la maternidad ahorras " + R.fmtEuros(res.sugerenciaPack.ahorro) + " con los mismos tres servicios." }));
-      }
-      resumen.appendChild(el("p", { class: "nota", text: "Pago en efectivo o Bizum. Si la cita es online, antes de la videollamada." }));
+      texto.appendChild(durs);
     }
-    res.errores.forEach(function (m) { resumen.appendChild(el("p", { class: "error", text: m })); });
+    var caja = el("span", { class: "eleccion-caja" }, [el("span", { class: "marca-eleccion", html: CHECK }), texto]);
+    return el("label", { class: "eleccion" + (esPack ? " pack" : "") }, [input, caja]);
   }
 
-  form.addEventListener("change", actualizar);
+  var lista = $("lista-servicios");
+  var grupos = {};
+  R.SERVICIOS.forEach(function (s) {
+    if (!grupos[s.grupo]) {
+      grupos[s.grupo] = el("div", { class: "elecciones" });
+      lista.appendChild(el("h3", { class: "grupo", text: s.grupo === "Pre-parto" ? "Preparación al parto" : s.grupo }));
+      lista.appendChild(grupos[s.grupo]);
+    }
+    grupos[s.grupo].appendChild(tarjeta(s, false));
+  });
+  lista.appendChild(el("h3", { class: "grupo", text: "Pack" }));
+  lista.appendChild(el("div", { class: "elecciones" }, [tarjeta(R.PACK, true)]));
 
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    var res = R.calcular(leerEstado());
-    if (!res.ok) return;
-    var url = R.urlReserva(res, cfg);
-    var banner = document.getElementById("banner-duracion");
-    banner.textContent = "";
-    banner.appendChild(el("strong", { text: "Duración necesaria: " + R.fmtDuracion(res.minutos) + ". " }));
-    banner.appendChild(document.createTextNode(res.pack
-      ? "Este pack tiene huecos propios de 4 h 30 min."
-      : "Comprueba que el calendario muestra esa duración antes de elegir un hueco."));
-    document.getElementById("marco-calendario").src = url;
-    document.getElementById("abrir-calendario").href = url;
-    resultado.hidden = false;
-    resultado.scrollIntoView({ behavior: "smooth", block: "start" });
+  lista.addEventListener("change", function (e) {
+    var t = e.target;
+    if (t.name === "pack" && t.checked) {
+      lista.querySelectorAll('input[name="servicio"]').forEach(function (c) { c.checked = false; });
+    } else if (t.name === "servicio" && t.checked) {
+      $("srv-pack").checked = false;
+    } else if (t.name === "dur-seguimiento") {
+      estado.durSeg = Number(t.value);
+    }
+    estado.ids = Array.prototype.map.call(lista.querySelectorAll('input[name="servicio"]:checked'), function (c) { return c.value; });
+    estado.pack = $("srv-pack").checked;
+    $("duraciones-seguimiento").hidden = estado.ids.indexOf("seguimiento") === -1;
+    validarPaso1();
   });
 
-  // Aviso mientras no se haya configurado Cal.com
-  var aviso = document.getElementById("aviso-prueba");
-  if (aviso) aviso.hidden = cfg.calUsuario !== "TU-USUARIO";
-
-  // Enlace de WhatsApp para reservas urgentes
-  var wa = document.getElementById("whatsapp-urgente");
-  if (wa) {
-    var texto = "Hola, necesito una cita urgente (en menos de 24 h).";
-    wa.href = "https://wa.me/" + cfg.whatsapp + "?text=" + encodeURIComponent(texto);
+  function validarPaso1() {
+    var hay = estado.pack || estado.ids.length > 0;
+    var min = minutosElegidos();
+    var aviso = $("aviso-paso1");
+    aviso.textContent = "";
+    var ok = hay;
+    if (!estado.pack && min > 240) {
+      ok = false;
+      aviso.textContent = "Estos servicios suman " + R.fmtDuracion(min) + " y no caben en una sola cita (máximo 4 h). Elige menos o resérvalos en dos citas.";
+    }
+    $("continuar-1").disabled = !ok;
   }
 
-  actualizar();
+  // ---------- Paso 2: modalidad ----------
+  function pintarModalidad() {
+    var pres = R.calcular(estadoCalculo("presencial", 0));
+    var onl = R.calcular(estadoCalculo("online", 0));
+    $("precio-presencial").textContent = R.fmtEuros(pres.total);
+    $("precio-online").textContent = R.fmtEuros(onl.total);
+    $("nota-presencial").textContent = "En tu casa · + desplazamiento según la zona";
+    var inOnline = $("mod-online"), inPres = $("mod-presencial");
+    if (estado.modalidad === "online") inOnline.checked = true;
+    else if (estado.modalidad === "presencial") inPres.checked = true;
+    else { inOnline.checked = false; inPres.checked = false; }
+    $("continuar-2").disabled = !estado.modalidad;
+  }
+  $("paso-2").addEventListener("change", function (e) {
+    if (e.target.name === "modalidad") {
+      estado.modalidad = e.target.value;
+      $("continuar-2").disabled = false;
+    }
+  });
+
+  // ---------- Paso 3: código postal ----------
+  var inputCp = $("cp");
+  function evaluarCp() {
+    var v = inputCp.value.replace(/\D/g, "").slice(0, 5);
+    if (inputCp.value !== v) inputCp.value = v;
+    estado.cp = v;
+    estado.zona = null;
+    var out = $("resultado-cp");
+    out.className = "resultado-cp";
+    out.textContent = "";
+    var ok = false;
+    var botonOnline = $("pasar-online");
+    botonOnline.hidden = true;
+    if (v.length === 5) {
+      var z = CP[v];
+      if (!z) {
+        out.classList.add("mal");
+        out.appendChild(el("span", { text: v.indexOf("28") === 0
+          ? "No encontramos ese código postal. Revísalo o escríbenos y lo miramos."
+          : "De momento solo hacemos consultas presenciales en la Comunidad de Madrid." }));
+        botonOnline.hidden = soloPresencial();
+      } else if (z[1] === null) {
+        out.classList.add("mal");
+        out.appendChild(el("span", { class: "lugar", text: z[0] }));
+        out.appendChild(el("span", { text: "Lo sentimos: hasta aquí no podemos desplazarnos." + (soloPresencial() ? "" : " Puedes hacer la consulta online.") }));
+        botonOnline.hidden = soloPresencial();
+      } else {
+        estado.zona = z;
+        ok = true;
+        out.appendChild(el("span", { class: "lugar", text: z[0] }));
+        out.appendChild(el("span", { text: z[1] === 0 ? "Desplazamiento incluido." : "Desplazamiento: + " + R.fmtEuros(z[1]) }));
+      }
+    }
+    $("continuar-3").disabled = !ok;
+  }
+  inputCp.addEventListener("input", evaluarCp);
+  $("pasar-online").addEventListener("click", function () {
+    estado.modalidad = "online";
+    irA(4);
+  });
+
+  // ---------- Paso 4: nota ----------
+  var nota = $("nota");
+  nota.addEventListener("input", function () {
+    estado.nota = nota.value;
+    $("contador-nota").textContent = nota.value.length + " / " + nota.maxLength;
+  });
+
+  // ---------- Paso 5: resumen y calendario ----------
+  function pintarResumen() {
+    var modalidad = soloPresencial() ? "presencial" : estado.modalidad;
+    var res = R.calcular(estadoCalculo(modalidad, modalidad === "presencial" ? (estado.zona ? estado.zona[1] : undefined) : 0));
+    var caja = $("resumen");
+    caja.textContent = "";
+    var tabla = el("table", { class: "resumen-tabla" });
+    res.lineas.forEach(function (l) {
+      tabla.appendChild(el("tr", {}, [el("td", { text: l.nombre + " · " + R.fmtDuracion(l.minutos) }), el("td", { class: "der", text: R.fmtEuros(l.precio) })]));
+    });
+    tabla.appendChild(el("tr", {}, [el("td", { text: modalidad === "presencial" ? "Presencial en " + (estado.zona ? estado.zona[0] : "tu casa") : "Online, por videollamada" }),
+      el("td", { class: "der", text: res.suplemento > 0 ? "+ " + R.fmtEuros(res.suplemento) : "" })]));
+    if (res.descuento > 0) tabla.appendChild(el("tr", {}, [el("td", { text: "Descuento por juntar servicios en una visita" }), el("td", { class: "der", text: "− " + R.fmtEuros(res.descuento) })]));
+    tabla.appendChild(el("tr", { class: "total" }, [el("td", { text: "Total · " + R.fmtDuracion(res.minutos) }), el("td", { class: "der", text: R.fmtEuros(res.total) })]));
+    caja.appendChild(tabla);
+    if (res.sugerenciaPack && res.sugerenciaPack.ahorro > 0) caja.appendChild(el("p", { class: "nota", text: "Consejo: el pack de preparación a la maternidad incluye estos tres servicios y te sale " + R.fmtEuros(res.sugerenciaPack.ahorro) + " más barato." }));
+    caja.appendChild(el("p", { class: "nota", text: "Pago en efectivo o Bizum." + (res.solo_manana ? " Por su duración, solo hay huecos por la mañana." : "") }));
+    res.errores.forEach(function (m) { caja.appendChild(el("p", { class: "error", text: m })); });
+
+    var extra = { cp: modalidad === "presencial" ? estado.cp : "", nota: estado.nota.trim() };
+    var cal = $("bloque-calendario"), sin = $("sin-calendario");
+    if (res.ok && R.calConfigurado(cfg)) {
+      var url = R.urlReserva(res, cfg, extra);
+      $("banner-duracion").innerHTML = "";
+      $("banner-duracion").appendChild(el("strong", { text: "Tu cita dura " + R.fmtDuracion(res.minutos) + ". " }));
+      $("banner-duracion").appendChild(document.createTextNode(res.pack ? "Elige día y hora de inicio." : "Comprueba que el calendario muestra esa duración y elige día y hora."));
+      $("marco-calendario").src = url;
+      $("abrir-calendario").href = url;
+      cal.hidden = false; sin.hidden = true;
+    } else {
+      cal.hidden = true; sin.hidden = !res.ok;
+      var texto = "Hola María, me gustaría reservar una cita.\n" + R.notasReserva(res, extra);
+      $("pedir-whatsapp").href = "https://wa.me/" + cfg.whatsapp + "?text=" + encodeURIComponent(texto);
+      $("pedir-email").href = "mailto:" + cfg.email + "?subject=" + encodeURIComponent("Reserva de cita") + "&body=" + encodeURIComponent(texto);
+    }
+  }
+
+  // ---------- Navegación ----------
+  function irA(n, inicial) {
+    pasoActual = n;
+    var visibles = pasosVisibles();
+    [1, 2, 3, 4, 5].forEach(function (i) { $("paso-" + i).hidden = i !== n; });
+    raiz.querySelectorAll(".pasos-progreso li").forEach(function (li) {
+      var i = Number(li.getAttribute("data-paso"));
+      li.hidden = visibles.indexOf(i) === -1;
+      li.classList.toggle("actual", i === n);
+      li.classList.toggle("hecho", i < n && visibles.indexOf(i) !== -1);
+      if (i === n) li.setAttribute("aria-current", "step"); else li.removeAttribute("aria-current");
+    });
+    // números consecutivos en la barra aunque se salte algún paso
+    visibles.forEach(function (i, k) { raiz.querySelector('.pasos-progreso li[data-paso="' + i + '"] .bola').textContent = String(k + 1); });
+    if (n === 2) pintarModalidad();
+    if (n === 3) evaluarCp();
+    if (n === 5) pintarResumen();
+    if (inicial) return;
+    var titulo = $("paso-" + n).querySelector("h2");
+    if (titulo) { titulo.setAttribute("tabindex", "-1"); titulo.focus({ preventScroll: true }); }
+    raiz.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  function siguiente() {
+    var v = pasosVisibles();
+    return v[v.indexOf(pasoActual) + 1];
+  }
+  function anterior() {
+    var v = pasosVisibles();
+    return v[v.indexOf(pasoActual) - 1];
+  }
+  raiz.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-ir]");
+    if (!b || b.disabled) return;
+    e.preventDefault();
+    if (b.getAttribute("data-ir") === "siguiente") {
+      if (pasoActual === 1 && soloPresencial()) estado.modalidad = "presencial";
+      irA(siguiente());
+    } else {
+      irA(anterior());
+    }
+  });
+  raiz.addEventListener("submit", function (e) { e.preventDefault(); });
+  inputCp.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" && !$("continuar-3").disabled) irA(siguiente());
+  });
+
+  // Enlaces que dependen de config.js
+  var urgente = $("whatsapp-urgente");
+  if (urgente) urgente.href = "https://wa.me/" + cfg.whatsapp + "?text=" + encodeURIComponent("Hola María, necesito una cita urgente (en menos de 24 h).");
+  var destete = $("enlace-destete");
+  if (destete) destete.href = R.calConfigurado(cfg)
+    ? "https://cal.com/" + cfg.calUsuario + "/seguimiento-destete"
+    : "https://wa.me/" + cfg.whatsapp + "?text=" + encodeURIComponent("Hola María, quiero reservar un seguimiento del plan de destete.");
+
+  validarPaso1();
+  irA(1, true);
 })();
