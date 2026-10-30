@@ -113,15 +113,21 @@
             <label class="visual-oculto" for="nota">Nota para María</label>
             <textarea class="campo-texto" id="nota" maxlength="400" placeholder="Por ejemplo: bebé de 3 semanas, dudas con el agarre."></textarea>
             <p class="contador" id="contador-nota">0 / 400</p>
+            <label class="casilla">
+              <input type="checkbox" id="consiento">
+              <span class="casilla-marca" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8.5 L6.5 12 L13 4.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span>He leído la <a href="aviso-legal.html#privacidad" target="_blank" rel="noopener">política de privacidad</a> y doy mi consentimiento explícito para que se traten mis datos, incluidos los de salud que comparta, con el fin de gestionar y realizar la consulta.</span>
+            </label>
             <div class="paso-botones">
               <button class="enlace-atras" type="button" data-ir="atras">← Atrás</button>
-              <button class="boton grande" type="button" data-ir="siguiente">Ver resumen</button>
+              <button class="boton grande" type="button" id="continuar-4" data-ir="siguiente" disabled>Ver resumen</button>
             </div>
           </section>
 
           <section class="paso" id="paso-5" aria-labelledby="t5" hidden>
             <h2 id="t5">Elige día y hora</h2>
             <div class="resumen-caja" id="resumen"></div>
+            <p class="consejo durazno" id="aviso-urgente"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#corazon"/></svg><span><strong>¿La necesitas para mañana?</strong> Las citas se reservan con al menos un día de antelación, por eso no verás huecos para mañana. Para una cita urgente, escríbenos por <a id="whatsapp-urgente" href="contacto.html" target="_blank" rel="noopener">WhatsApp</a> y buscamos un hueco (suplemento de 20&nbsp;€).</span></p>
             <div id="bloque-calendario" hidden>
               <p class="banner-duracion" id="banner-duracion"></p>
               <div class="reserva-marco"><iframe id="marco-calendario" title="Calendario de reservas" loading="lazy"></iframe></div>
@@ -151,13 +157,6 @@
           </div>
         </dialog>
 
-        <h2 style="margin-top:48px">Otras reservas</h2>
-        <ul>
-          <li><strong>Seguimiento del plan de destete</strong> (15&nbsp;min online, 20&nbsp;€): <a id="enlace-destete" href="contacto.html" target="_blank" rel="noopener">reservar seguimiento</a>.</li>
-          <li><strong>¿Es urgente (en menos de 24&nbsp;h)?</strong> Escríbenos por <a id="whatsapp-urgente" href="contacto.html" target="_blank" rel="noopener">WhatsApp</a>. Suplemento de 20&nbsp;€.</li>
-        </ul>
-
-        <p class="nota">Pago en efectivo o Bizum en la consulta. Al reservar aceptas el tratamiento de tus datos según la <a href="aviso-legal.html#privacidad">política de privacidad</a>. Por favor, no escribas información clínica detallada en el formulario: la veremos juntas en la consulta.</p>
       </div>
     </section>
   </main>

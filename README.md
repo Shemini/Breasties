@@ -62,17 +62,18 @@ Pago en efectivo o Bizum; las facturas las gestionáis vosotros. Sin Stripe por 
 
 | Enlace | Horario | Duraciones | Margen antes/después |
 |---|---|---|---|
-| `cita-online` | Consultas | 15 a 240 min, de 15 en 15 | 60 min |
+| `cita-online` | Consultas | 15 a 240 min, de 15 en 15 (incluye el seguimiento de destete de 15 min) | 60 min |
 | `cita-presencial` | Consultas | 15 a 240 min, de 15 en 15 | 60 min |
 | `cita-presencial-lejos` | Consultas | 15 a 240 min, de 15 en 15 | 90 min |
 | `pack-preparacion` | Pack | 270 min fijos | 60 min |
 | `pack-preparacion-lejos` | Pack | 270 min fijos | 90 min |
-| `seguimiento-destete` | Consultas | 15 min | 60 min |
 
-4. En todos: reservas hasta 30 días vista, aviso mínimo de 24 h, intervalo de huecos de 15 min. Ubicación: Google Meet en los online; "dirección del asistente" en los presenciales. Añade un campo de dirección y teléfono. En el texto de confirmación indica pago en efectivo o Bizum.
+4. En todos: reservas hasta 30 días vista, **aviso mínimo de 36 h** (Cal.com cuenta horas, no días de calendario: con 36 h, quien reserve entre las 6:00 y las 22:00 no verá ningún hueco para el día siguiente), intervalo de huecos de 15 min. Ubicación: Google Meet en los online; "dirección del asistente" en los presenciales. Añade un campo de dirección y teléfono. En el texto de confirmación indica pago en efectivo o Bizum.
 5. Pon tu usuario en `config.js`. Mientras siga `TU-USUARIO`, el último paso de la reserva ofrece pedir cita por WhatsApp o correo con el resumen (así no sale la página 404 de Cal.com).
 
-Las reservas urgentes (menos de 24 h, +20 €) se piden por WhatsApp.
+Las reservas urgentes (para el día siguiente, +20 €) se piden por WhatsApp; el aviso aparece junto al calendario.
+
+**Cuenta:** crea Cal.com con la cuenta de Google del negocio y conecta también el calendario personal de María solo para comprobar conflictos, así sus ocupaciones bloquean huecos.
 
 ### Cosas por comprobar en tu cuenta de Cal.com
 

@@ -19,18 +19,22 @@
   var SUPLEMENTO_LEJOS = 20;    // desde este suplemento, el margen entre citas sube a 1 h 30 min
 
   var SERVICIOS = [
-    { id: "primera", grupo: "Lactancia", nombre: "Primera consultoría de lactancia",
+    { id: "primera", grupo: "Lactancia", nombre: "Consulta inicial de lactancia",
       min: 120, precio: { presencial: 120, online: 80 },
       info: "Una visita tranquila para ver cómo va la lactancia: observamos una toma, revisamos el agarre y la postura, resolvemos tus dudas y preparamos un plan adaptado a vosotros. Suele durar entre 1 y 2 horas; reservamos 2 para ir sin prisas. Incluye un resumen por escrito.",
       detalle: "Valoración completa. Dura entre 1 y 2 horas; se reservan 2." },
     { id: "seguimiento", grupo: "Lactancia", nombre: "Seguimiento de lactancia",
       min: 60, duraciones: [30, 45, 60], precio: { presencial: 60, online: 30 },
-      info: "Una revisión después de la primera consultoría para ver cómo evoluciona todo, ajustar el plan y resolver las dudas nuevas. Tú eliges si necesitas 30, 45 o 60 minutos.",
+      info: "Una revisión después de la consulta inicial para ver cómo evoluciona todo, ajustar el plan y resolver las dudas nuevas. Tú eliges si necesitas 30, 45 o 60 minutos.",
       detalle: "Revisión de entre 30 y 60 minutos." },
     { id: "destete", grupo: "Lactancia", nombre: "Plan de destete",
       min: 120, precio: { presencial: 100, online: 60 },
       info: "Te acompaño a planificar un destete respetuoso, al ritmo que necesitéis tu bebé y tú. La primera consulta dura 2 horas; después hacemos seguimientos online de 15 minutos para ir ajustando el plan.",
       detalle: "Primera consulta de 2 horas y, después, seguimientos online cortos." },
+    { id: "seguimientoDestete", grupo: "Lactancia", nombre: "Seguimiento de destete",
+      min: 15, precio: { presencial: null, online: 20 },
+      info: "Una revisión online de 15 minutos durante el plan de destete para ver cómo vais y ajustar lo necesario. Puedes reservar uno cada vez que lo necesites.",
+      detalle: "Revisión online de 15 minutos." },
     { id: "prepLactancia", grupo: "Pre-parto", nombre: "Prepara tu lactancia",
       min: 120, precio: { presencial: 80, online: 50 },
       info: "Una sesión individual antes del nacimiento para llegar con información y confianza: cómo funciona la lactancia, las primeras tomas, posturas, señales de hambre y a quién pedir ayuda.",
@@ -235,6 +239,14 @@
   function soloPresencial() {
     return estado.pack || estado.ids.indexOf("porteo") !== -1;
   }
+  function soloOnline() {
+    return !estado.pack && estado.ids.indexOf("seguimientoDestete") !== -1;
+  }
+  function etiquetaModalidad(s) {
+    if (s.precio.online === null) return "Solo presencial";
+    if (s.precio.presencial === null) return "Solo online";
+    return null;
+  }
   function minutosElegidos() {
     if (estado.pack) return R.PACK.min;
     return estado.ids.reduce(function (t, id) {
@@ -265,7 +277,7 @@
     var id = "srv-" + s.id;
     var input = el("input", { type: "checkbox", id: id, value: s.id, name: esPack ? "pack" : "servicio" });
     var etiquetas = [el("span", { class: "etiqueta", text: textoDuracion(s) })];
-    if (s.precio.online === null) etiquetas.push(el("span", { class: "etiqueta durazno", text: "Solo presencial" }));
+    if (etiquetaModalidad(s)) etiquetas.push(el("span", { class: "etiqueta durazno", text: etiquetaModalidad(s) }));
     var texto = el("span", { class: "eleccion-texto" }, [
       el("span", { class: "eleccion-titulo", text: s.nombre }),
       el("span", { class: "etiquetas" }, etiquetas)
@@ -288,18 +300,15 @@
 
   var lista = $("lista-servicios");
   var grupos = {};
-  var columnas = el("div", { class: "grupos-servicios" });
-  lista.appendChild(columnas);
   R.SERVICIOS.forEach(function (s) {
     if (!grupos[s.grupo]) {
-      grupos[s.grupo] = el("div", { class: "elecciones compactas" });
-      columnas.appendChild(el("div", { class: "grupo-servicios" }, [
-        el("h3", { class: "grupo", text: s.grupo === "Pre-parto" ? "Preparación al parto" : s.grupo }), grupos[s.grupo]]));
+      grupos[s.grupo] = el("div", { class: "rejilla-servicios" });
+      lista.appendChild(el("h3", { class: "grupo", text: s.grupo === "Pre-parto" ? "Preparación al parto" : s.grupo }));
+      lista.appendChild(grupos[s.grupo]);
     }
     grupos[s.grupo].appendChild(tarjeta(s, false));
   });
-  columnas.appendChild(el("div", { class: "grupo-servicios ancho" }, [
-    el("h3", { class: "grupo", text: "Pack" }), el("div", { class: "elecciones compactas" }, [tarjeta(R.PACK, true)])]));
+  grupos["Pre-parto"].appendChild(tarjeta(R.PACK, true));
 
   // ---------- Ventana de información ----------
   var dialogo = $("info-servicio");
@@ -321,7 +330,7 @@
     var et = $("info-etiquetas");
     et.textContent = "";
     et.appendChild(el("span", { class: "etiqueta", text: textoDuracion(s) }));
-    et.appendChild(el("span", { class: "etiqueta durazno", text: s.precio.online === null ? "Solo presencial" : "Presencial u online" }));
+    et.appendChild(el("span", { class: "etiqueta durazno", text: etiquetaModalidad(s) || "Presencial u online" }));
     pintarBotonDialogo();
     if (typeof dialogo.showModal === "function") dialogo.showModal(); else dialogo.setAttribute("open", "");
     // El botón "atrás" del móvil cierra la ventana en lugar de salir de la página
@@ -372,7 +381,10 @@
     var aviso = $("aviso-paso1");
     aviso.textContent = "";
     var ok = hay;
-    if (!estado.pack && min > 240) {
+    if (soloPresencial() && soloOnline()) {
+      ok = false;
+      aviso.textContent = "El seguimiento de destete es online y " + (estado.pack ? "el pack" : "la asesoría de porteo") + " es presencial: resérvalos en citas distintas.";
+    } else if (!estado.pack && min > 240) {
       ok = false;
       aviso.textContent = "Estos servicios suman " + R.fmtDuracion(min) + " y no caben en una sola cita (máximo 4 h). Elige menos o resérvalos en dos citas.";
     }
@@ -385,13 +397,18 @@
     var onl = R.calcular(estadoCalculo("online", 0));
     $("precio-presencial").textContent = R.fmtEuros(pres.total);
     var sinOnline = soloPresencial();
+    var sinPresencial = soloOnline();
     if (sinOnline && estado.modalidad === "online") estado.modalidad = null;
+    if (sinPresencial && estado.modalidad === "presencial") estado.modalidad = null;
     $("mod-online").disabled = sinOnline;
+    $("mod-presencial").disabled = sinPresencial;
+    $("precio-presencial").hidden = sinPresencial;
+    $("mod-presencial").closest(".eleccion").classList.toggle("no-disponible", sinPresencial);
     $("precio-online").textContent = sinOnline ? "" : R.fmtEuros(onl.total);
     $("precio-online").hidden = sinOnline;
     $("nota-online").textContent = sinOnline ? "No disponible para tu selección" : "Por videollamada, desde donde estés";
     $("mod-online").closest(".eleccion").classList.toggle("no-disponible", sinOnline);
-    $("nota-presencial").textContent = "En tu casa · + desplazamiento según la zona";
+    $("nota-presencial").textContent = soloOnline() ? "No disponible para tu selección" : "En tu casa · + desplazamiento según la zona";
     var inOnline = $("mod-online"), inPres = $("mod-presencial");
     if (estado.modalidad === "online") inOnline.checked = true;
     else if (estado.modalidad === "presencial") inPres.checked = true;
@@ -473,6 +490,8 @@
     res.errores.forEach(function (m) { caja.appendChild(el("p", { class: "error", text: m })); });
 
     var extra = { cp: modalidad === "presencial" ? estado.cp : "", nota: estado.nota.trim() };
+    var textoUrgente = "Hola María, necesito una cita urgente (en menos de 24 h).\n" + R.notasReserva(res, extra);
+    $("whatsapp-urgente").href = "https://wa.me/" + cfg.whatsapp + "?text=" + encodeURIComponent(textoUrgente);
     var cal = $("bloque-calendario"), sin = $("sin-calendario");
     if (res.ok && R.calConfigurado(cfg)) {
       var url = R.urlReserva(res, cfg, extra);
@@ -536,13 +555,11 @@
     if (e.key === "Enter" && !$("continuar-3").disabled) irA(siguiente());
   });
 
-  // Enlaces que dependen de config.js
-  var urgente = $("whatsapp-urgente");
-  if (urgente) urgente.href = "https://wa.me/" + cfg.whatsapp + "?text=" + encodeURIComponent("Hola María, necesito una cita urgente (en menos de 24 h).");
-  var destete = $("enlace-destete");
-  if (destete) destete.href = R.calConfigurado(cfg)
-    ? "https://cal.com/" + cfg.calUsuario + "/seguimiento-destete"
-    : "https://wa.me/" + cfg.whatsapp + "?text=" + encodeURIComponent("Hola María, quiero reservar un seguimiento del plan de destete.");
+  // Consentimiento obligatorio antes de ver el calendario
+  var consiento = $("consiento");
+  function validarPaso4() { $("continuar-4").disabled = !consiento.checked; }
+  consiento.addEventListener("change", validarPaso4);
+  validarPaso4();
 
   validarPaso1();
   irA(1, true);

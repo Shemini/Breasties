@@ -584,22 +584,7 @@ textarea.campo-texto { min-height: 140px; resize: vertical; }
 .sin-calendario { text-align: center; background: var(--crema-2); border-radius: 28px; padding: 26px 22px; box-shadow: 0 6px 0 var(--rosa); }
 .sin-calendario h3 { margin: 0 0 6px; }
 
-/* ---------- Tarjetas compactas e información ---------- */
-.grupos-servicios { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 22px; }
-.grupos-servicios .ancho { grid-column: 1 / -1; }
-.grupos-servicios h3.grupo { margin: 4px 0 10px; font-size: 1.2rem; }
-@media (max-width: 760px) { .grupos-servicios { grid-template-columns: 1fr; } }
-.elecciones.compactas { grid-template-columns: 1fr; gap: 12px; }
-.grupos-servicios .ancho .elecciones.compactas { max-width: calc(50% - 11px); }
-@media (max-width: 760px) { .grupos-servicios .ancho .elecciones.compactas { max-width: none; } }
 .eleccion-envoltorio { position: relative; }
-.compactas .eleccion-caja { padding: 11px 52px 11px 14px; gap: 12px; align-items: center; border-radius: 20px 24px 20px 26px; box-shadow: 0 4px 0 var(--rosa); }
-.compactas .eleccion > input:checked + .eleccion-caja { box-shadow: 0 4px 0 var(--rosa-fuerte); }
-.compactas .eleccion.pack .eleccion-caja { box-shadow: 0 4px 0 var(--oro); }
-.compactas .marca-eleccion { width: 26px; height: 26px; margin-top: 0; }
-.compactas .eleccion-titulo { font-size: 1.08rem; }
-.compactas .etiquetas { margin-top: 3px; }
-.compactas .duraciones { margin-top: 8px; }
 .boton-info {
   position: absolute; top: 50%; right: 12px; transform: translateY(-50%);
   width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--rosa-fuerte);
@@ -647,26 +632,46 @@ textarea.campo-texto { min-height: 140px; resize: vertical; }
 .cabecera-reserva .manuscrita { margin-bottom: 0; }
 .pasos-progreso { margin-bottom: 20px; }
 #paso-1 > h2 { margin-bottom: 2px; }
-.compactas .eleccion-texto { flex-direction: row; flex-wrap: wrap; align-items: center; column-gap: 10px; row-gap: 4px; }
-.compactas .etiquetas { margin-top: 0; }
-.compactas .duraciones { flex-basis: 100%; }
-.compactas .eleccion-caja { padding-top: 10px; padding-bottom: 10px; min-height: 58px; }
-.elecciones.compactas { gap: 10px; }
-.grupos-servicios h3.grupo { margin: 0 0 8px; }
 #paso-1 .consejo { font-size: .9rem; margin-bottom: 14px; }
 /* Paso 1 a lo ancho (tres columnas); el resto de pasos y textos, estrechos */
-#reserva .paso:not(#paso-1), #reserva + .ventana-info ~ *, .cabecera-reserva ~ h2, .cabecera-reserva ~ ul, .cabecera-reserva ~ p.nota { max-width: 732px; margin-left: auto; margin-right: auto; }
+#reserva .paso:not(#paso-1) { max-width: 732px; margin-left: auto; margin-right: auto; }
 #paso-1 .sub, #paso-1 .consejo { max-width: 732px; margin-left: auto; margin-right: auto; }
-@media (min-width: 980px) {
-  .grupos-servicios { grid-template-columns: repeat(3, 1fr); }
-  .grupos-servicios .ancho { grid-column: auto; }
-  .grupos-servicios .ancho .elecciones.compactas { max-width: none; }
-  #paso-1 .consejo { max-width: none; justify-content: center; }
-}
+
 section.bloque-reserva { padding-top: 8px; }
 .bloque-reserva .cabecera-reserva { margin-bottom: 14px; }
 #paso-1 > h2 { font-size: clamp(1.5rem, 3vw, 1.9rem); }
 #paso-1 .sub { margin-bottom: 10px; }
 #paso-1 .paso-botones { margin-top: 16px; }
-.compactas .eleccion-caja { min-height: 52px; padding-top: 8px; padding-bottom: 8px; }
-.elecciones.compactas { gap: 9px; }
+
+/* Servicios en rejilla de dos columnas, todas las tarjetas del mismo tamaño */
+#paso-1 { max-width: 980px; margin-left: auto; margin-right: auto; }
+#paso-1 .sub, #paso-1 .consejo { max-width: 732px; margin-left: auto; margin-right: auto; }
+#paso-1 h3.grupo { margin: 22px 0 10px; font-size: 1.3rem; }
+#paso-1 h3.grupo:first-of-type { margin-top: 0; }
+.rejilla-servicios { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 18px; align-items: stretch; }
+@media (max-width: 760px) { .rejilla-servicios { grid-template-columns: minmax(0, 1fr); gap: 12px; } }
+.rejilla-servicios .eleccion-envoltorio, .rejilla-servicios .eleccion { height: 100%; }
+.rejilla-servicios .eleccion-caja { align-items: center; padding: 14px 56px 14px 16px; min-height: 84px; box-shadow: 0 5px 0 var(--rosa); }
+.rejilla-servicios .eleccion > input:checked + .eleccion-caja { box-shadow: 0 5px 0 var(--rosa-fuerte); }
+.rejilla-servicios .eleccion.pack .eleccion-caja { box-shadow: 0 5px 0 var(--oro); }
+.rejilla-servicios .marca-eleccion { margin-top: 0; }
+.rejilla-servicios .eleccion-texto { gap: 6px; }
+.rejilla-servicios .eleccion-titulo { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 1.15rem; }
+.rejilla-servicios .etiquetas { margin-top: 0; }
+.rejilla-servicios .duraciones { margin-top: 4px; }
+@media (max-width: 420px) {
+  .rejilla-servicios .eleccion-caja { padding: 12px 48px 12px 12px; gap: 10px; min-height: 76px; }
+  .rejilla-servicios .eleccion-titulo { font-size: 1rem; }
+  .rejilla-servicios .marca-eleccion { width: 24px; height: 24px; }
+  .rejilla-servicios .boton-info { right: 10px; width: 30px; height: 30px; }
+}
+
+/* Casilla de consentimiento (sin cajas blancas del navegador) */
+.casilla { display: flex; gap: 12px; align-items: flex-start; margin: 20px 0 0; font-size: .95rem; cursor: pointer; position: relative; }
+.casilla input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.casilla-marca { flex: none; width: 26px; height: 26px; margin-top: 1px; border-radius: 8px; background: var(--rosa); border: 2px solid var(--rosa-fuerte); color: transparent; display: grid; place-items: center; transition: background .15s; }
+.casilla-marca svg { width: 15px; height: 15px; }
+.casilla input:checked + .casilla-marca { background: var(--acento); border-color: var(--acento); color: #fff; }
+.casilla input:focus-visible + .casilla-marca { outline: 3px solid var(--oro); outline-offset: 2px; }
+#aviso-urgente { margin: 0 0 20px; }
+@media (max-width: 379px) { .rejilla-servicios .eleccion-titulo { white-space: normal; } }
