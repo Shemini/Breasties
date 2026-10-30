@@ -5,6 +5,7 @@
   o una duración, edita los números de SERVICIOS y PACK.
 
   precio.presencial / precio.online: euros (null = ese formato no se ofrece)
+  info: texto de la ventana de información (botón «i»)
   min: minutos que se reservan en el calendario
 */
 (function (root, factory) {
@@ -20,21 +21,27 @@
   var SERVICIOS = [
     { id: "primera", grupo: "Lactancia", nombre: "Primera consultoría de lactancia",
       min: 120, precio: { presencial: 120, online: 80 },
+      info: "Una visita tranquila para ver cómo va la lactancia: observamos una toma, revisamos el agarre y la postura, resolvemos tus dudas y preparamos un plan adaptado a vosotros. Suele durar entre 1 y 2 horas; reservamos 2 para ir sin prisas. Incluye un resumen por escrito.",
       detalle: "Valoración completa. Dura entre 1 y 2 horas; se reservan 2." },
     { id: "seguimiento", grupo: "Lactancia", nombre: "Seguimiento de lactancia",
       min: 60, duraciones: [30, 45, 60], precio: { presencial: 60, online: 30 },
+      info: "Una revisión después de la primera consultoría para ver cómo evoluciona todo, ajustar el plan y resolver las dudas nuevas. Tú eliges si necesitas 30, 45 o 60 minutos.",
       detalle: "Revisión de entre 30 y 60 minutos." },
     { id: "destete", grupo: "Lactancia", nombre: "Plan de destete",
       min: 120, precio: { presencial: 100, online: 60 },
+      info: "Te acompaño a planificar un destete respetuoso, al ritmo que necesitéis tu bebé y tú. La primera consulta dura 2 horas; después hacemos seguimientos online de 15 minutos para ir ajustando el plan.",
       detalle: "Primera consulta de 2 horas y, después, seguimientos online cortos." },
     { id: "prepLactancia", grupo: "Pre-parto", nombre: "Prepara tu lactancia",
       min: 120, precio: { presencial: 80, online: 50 },
+      info: "Una sesión individual antes del nacimiento para llegar con información y confianza: cómo funciona la lactancia, las primeras tomas, posturas, señales de hambre y a quién pedir ayuda.",
       detalle: "Taller individual de 2 horas." },
     { id: "prepParto", grupo: "Pre-parto", nombre: "Preparación del parto",
       min: 120, precio: { presencial: 80, online: 50 },
+      info: "Una sesión individual para preparar el parto: sus fases, recursos para manejar el dolor, el plan de parto y qué llevar al hospital. Para que llegues tranquila y con tus preguntas resueltas.",
       detalle: "Sesión individual de 2 horas." },
     { id: "porteo", grupo: "Pre-parto", nombre: "Asesoría de porteo",
       min: 30, precio: { presencial: 50, online: null },
+      info: "Aprende a elegir y colocar el portabebés con seguridad y comodidad para ti y tu bebé. Es solo presencial, porque hay que probarlo en persona.",
       detalle: "Cómo portear con seguridad y comodidad. 30 minutos." }
   ];
 
@@ -42,6 +49,7 @@
     id: "pack", nombre: "Pack de preparación a la maternidad",
     min: 270, precio: { presencial: 150, online: null },
     incluye: ["prepLactancia", "prepParto", "porteo"],
+    info: "Las tres sesiones de preparación en una sola visita: Prepara tu lactancia, Preparación del parto y Asesoría de porteo. Dura 4 h 30 min, empieza a las 10:00 y puede terminar a las 14:30. Es solo presencial.",
     detalle: "Prepara tu lactancia, Preparación del parto y Asesoría de porteo en una sola visita de 4 h 30 min."
   };
 
@@ -243,22 +251,23 @@
     };
   }
   function pasosVisibles() {
-    var p = [1];
-    if (!soloPresencial()) p.push(2);
+    var p = [1, 2];
     if (estado.modalidad !== "online") p.push(3);
     p.push(4, 5);
     return p;
   }
 
   // ---------- Paso 1: servicios ----------
+  function textoDuracion(s) {
+    return s.duraciones ? R.fmtDuracion(s.duraciones[0]) + " a " + R.fmtDuracion(s.duraciones[s.duraciones.length - 1]) : R.fmtDuracion(s.min);
+  }
   function tarjeta(s, esPack) {
     var id = "srv-" + s.id;
     var input = el("input", { type: "checkbox", id: id, value: s.id, name: esPack ? "pack" : "servicio" });
-    var etiquetas = [el("span", { class: "etiqueta", text: R.fmtDuracion(s.duraciones ? s.duraciones[0] : s.min) + (s.duraciones ? " a " + R.fmtDuracion(s.duraciones[s.duraciones.length - 1]) : "") })];
+    var etiquetas = [el("span", { class: "etiqueta", text: textoDuracion(s) })];
     if (s.precio.online === null) etiquetas.push(el("span", { class: "etiqueta durazno", text: "Solo presencial" }));
     var texto = el("span", { class: "eleccion-texto" }, [
       el("span", { class: "eleccion-titulo", text: s.nombre }),
-      el("span", { class: "eleccion-detalle", text: s.detalle }),
       el("span", { class: "etiquetas" }, etiquetas)
     ]);
     if (s.duraciones) {
@@ -272,21 +281,75 @@
       texto.appendChild(durs);
     }
     var caja = el("span", { class: "eleccion-caja" }, [el("span", { class: "marca-eleccion", html: CHECK }), texto]);
-    return el("label", { class: "eleccion" + (esPack ? " pack" : "") }, [input, caja]);
+    var label = el("label", { class: "eleccion" + (esPack ? " pack" : "") }, [input, caja]);
+    var info = el("button", { type: "button", class: "boton-info", "data-info": s.id, "aria-label": "Más información sobre " + s.nombre, text: "i" });
+    return el("div", { class: "eleccion-envoltorio" }, [label, info]);
   }
 
   var lista = $("lista-servicios");
   var grupos = {};
+  var columnas = el("div", { class: "grupos-servicios" });
+  lista.appendChild(columnas);
   R.SERVICIOS.forEach(function (s) {
     if (!grupos[s.grupo]) {
-      grupos[s.grupo] = el("div", { class: "elecciones" });
-      lista.appendChild(el("h3", { class: "grupo", text: s.grupo === "Pre-parto" ? "Preparación al parto" : s.grupo }));
-      lista.appendChild(grupos[s.grupo]);
+      grupos[s.grupo] = el("div", { class: "elecciones compactas" });
+      columnas.appendChild(el("div", { class: "grupo-servicios" }, [
+        el("h3", { class: "grupo", text: s.grupo === "Pre-parto" ? "Preparación al parto" : s.grupo }), grupos[s.grupo]]));
     }
     grupos[s.grupo].appendChild(tarjeta(s, false));
   });
-  lista.appendChild(el("h3", { class: "grupo", text: "Pack" }));
-  lista.appendChild(el("div", { class: "elecciones" }, [tarjeta(R.PACK, true)]));
+  columnas.appendChild(el("div", { class: "grupo-servicios ancho" }, [
+    el("h3", { class: "grupo", text: "Pack" }), el("div", { class: "elecciones compactas" }, [tarjeta(R.PACK, true)])]));
+
+  // ---------- Ventana de información ----------
+  var dialogo = $("info-servicio");
+  var dialogoServicio = null;
+  var entradaHistorial = false;
+  function buscarCualquiera(id) {
+    return id === "pack" ? R.PACK : R.SERVICIOS.filter(function (s) { return s.id === id; })[0];
+  }
+  function pintarBotonDialogo() {
+    var marcado = $("srv-" + dialogoServicio.id).checked;
+    $("info-elegir").textContent = marcado ? "Quitar de mi cita" : "Añadir a mi cita";
+    $("info-elegir").classList.toggle("suave", marcado);
+  }
+  function abrirInfo(id) {
+    var s = buscarCualquiera(id);
+    dialogoServicio = s;
+    $("info-titulo").textContent = s.nombre;
+    $("info-texto").textContent = s.info || s.detalle;
+    var et = $("info-etiquetas");
+    et.textContent = "";
+    et.appendChild(el("span", { class: "etiqueta", text: textoDuracion(s) }));
+    et.appendChild(el("span", { class: "etiqueta durazno", text: s.precio.online === null ? "Solo presencial" : "Presencial u online" }));
+    pintarBotonDialogo();
+    if (typeof dialogo.showModal === "function") dialogo.showModal(); else dialogo.setAttribute("open", "");
+    // El botón "atrás" del móvil cierra la ventana en lugar de salir de la página
+    try { history.pushState({ infoAbierta: true }, ""); entradaHistorial = true; } catch (e) { entradaHistorial = false; }
+  }
+  function cerrarInfo() {
+    if (dialogo.open) dialogo.close();
+  }
+  dialogo.addEventListener("close", function () {
+    if (entradaHistorial) { entradaHistorial = false; history.back(); }
+  });
+  window.addEventListener("popstate", function () {
+    if (dialogo.open) { entradaHistorial = false; dialogo.close(); }
+  });
+  dialogo.addEventListener("click", function (e) {
+    if (e.target === dialogo) cerrarInfo(); // clic en el fondo oscuro
+  });
+  $("info-cerrar").addEventListener("click", cerrarInfo);
+  $("info-elegir").addEventListener("click", function () {
+    var c = $("srv-" + dialogoServicio.id);
+    c.checked = !c.checked;
+    c.dispatchEvent(new Event("change", { bubbles: true }));
+    cerrarInfo();
+  });
+  lista.addEventListener("click", function (e) {
+    var b = e.target.closest(".boton-info");
+    if (b) { e.preventDefault(); abrirInfo(b.getAttribute("data-info")); }
+  });
 
   lista.addEventListener("change", function (e) {
     var t = e.target;
@@ -321,7 +384,13 @@
     var pres = R.calcular(estadoCalculo("presencial", 0));
     var onl = R.calcular(estadoCalculo("online", 0));
     $("precio-presencial").textContent = R.fmtEuros(pres.total);
-    $("precio-online").textContent = R.fmtEuros(onl.total);
+    var sinOnline = soloPresencial();
+    if (sinOnline && estado.modalidad === "online") estado.modalidad = null;
+    $("mod-online").disabled = sinOnline;
+    $("precio-online").textContent = sinOnline ? "" : R.fmtEuros(onl.total);
+    $("precio-online").hidden = sinOnline;
+    $("nota-online").textContent = sinOnline ? "No disponible para tu selección" : "Por videollamada, desde donde estés";
+    $("mod-online").closest(".eleccion").classList.toggle("no-disponible", sinOnline);
     $("nota-presencial").textContent = "En tu casa · + desplazamiento según la zona";
     var inOnline = $("mod-online"), inPres = $("mod-presencial");
     if (estado.modalidad === "online") inOnline.checked = true;
@@ -433,8 +502,9 @@
       li.classList.toggle("hecho", i < n && visibles.indexOf(i) !== -1);
       if (i === n) li.setAttribute("aria-current", "step"); else li.removeAttribute("aria-current");
     });
-    // números consecutivos en la barra aunque se salte algún paso
-    visibles.forEach(function (i, k) { raiz.querySelector('.pasos-progreso li[data-paso="' + i + '"] .bola').textContent = String(k + 1); });
+    raiz.querySelectorAll(".pasos-progreso li").forEach(function (li) {
+      li.querySelector(".bola").innerHTML = li.classList.contains("hecho") ? CHECK : "";
+    });
     if (n === 2) pintarModalidad();
     if (n === 3) evaluarCp();
     if (n === 5) pintarResumen();
@@ -456,7 +526,6 @@
     if (!b || b.disabled) return;
     e.preventDefault();
     if (b.getAttribute("data-ir") === "siguiente") {
-      if (pasoActual === 1 && soloPresencial()) estado.modalidad = "presencial";
       irA(siguiente());
     } else {
       irA(anterior());

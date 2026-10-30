@@ -50,28 +50,28 @@
 
   <main>
     <div class="ola" style="--de:var(--crema);--a:var(--rosa-claro)" aria-hidden="true"><svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0 32 C180 62 320 0 520 30 S840 60 1040 30 S1300 0 1440 32 V60 H0Z"/></svg></div>
-    <section class="bloque rosa">
-      <div class="wrap estrecho">
-        <div class="cabecera-bloque">
+    <section class="bloque rosa bloque-reserva">
+      <div class="wrap">
+        <div class="cabecera-bloque cabecera-reserva">
           <div class="manuscrita">un huequito para vosotros</div>
           <h1>Reservar cita</h1>
-          <p>En cuatro pasos sencillos: qué necesitas, cómo, dónde y cuándo.</p>
+          
         </div>
 
         <noscript><p class="error">Esta página necesita JavaScript. Puedes pedir cita desde <a href="contacto.html">contacto</a>.</p></noscript>
 
         <form id="reserva" novalidate>
           <ol class="pasos-progreso" aria-label="Pasos de la reserva">
-            <li data-paso="1"><span class="bola">1</span><span class="txt">Servicio</span></li>
-            <li data-paso="2"><span class="bola">2</span><span class="txt">Modalidad</span></li>
-            <li data-paso="3"><span class="bola">3</span><span class="txt">Lugar</span></li>
-            <li data-paso="4"><span class="bola">4</span><span class="txt">Nota</span></li>
-            <li data-paso="5"><span class="bola">5</span><span class="txt">Día y hora</span></li>
+            <li data-paso="1"><span class="bola"></span><span class="txt">Servicio</span></li>
+            <li data-paso="2"><span class="bola"></span><span class="txt">Modalidad</span></li>
+            <li data-paso="3"><span class="bola"></span><span class="txt">Lugar</span></li>
+            <li data-paso="4"><span class="bola"></span><span class="txt">Nota</span></li>
+            <li data-paso="5"><span class="bola"></span><span class="txt">Día y hora</span></li>
           </ol>
 
           <section class="paso" id="paso-1" aria-labelledby="t1">
             <h2 id="t1">¿Qué servicio te interesa?</h2>
-            <p class="sub">Puedes marcar varios.</p>
+            <p class="sub">Puedes marcar varios. Pulsa <span class="i-mini" aria-hidden="true">i</span> para saber más de cada uno.</p>
             <p class="consejo"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#corazon"/></svg><span>Si eliges consulta presencial, juntar varios servicios en una misma visita ahorra gastos de desplazamiento.</span></p>
             <div id="lista-servicios"></div>
             <p class="error" id="aviso-paso1" aria-live="polite"></p>
@@ -85,7 +85,7 @@
             <p class="sub">Precio para los servicios que has elegido.</p>
             <div class="elecciones" role="radiogroup" aria-labelledby="t2">
               <label class="eleccion"><input type="radio" name="modalidad" value="presencial" id="mod-presencial"><span class="eleccion-caja"><span class="marca-eleccion"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 L6.5 12 L13 4.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="eleccion-texto"><span class="eleccion-titulo">Presencial</span><span class="eleccion-precio" id="precio-presencial"></span><span class="eleccion-nota" id="nota-presencial"></span></span></span></label>
-              <label class="eleccion"><input type="radio" name="modalidad" value="online" id="mod-online"><span class="eleccion-caja"><span class="marca-eleccion"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 L6.5 12 L13 4.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="eleccion-texto"><span class="eleccion-titulo">Online</span><span class="eleccion-precio" id="precio-online"></span><span class="eleccion-nota">Por videollamada, desde donde estés</span></span></span></label>
+              <label class="eleccion"><input type="radio" name="modalidad" value="online" id="mod-online"><span class="eleccion-caja"><span class="marca-eleccion"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 L6.5 12 L13 4.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="eleccion-texto"><span class="eleccion-titulo">Online</span><span class="eleccion-precio" id="precio-online"></span><span class="eleccion-nota" id="nota-online">Por videollamada, desde donde estés</span></span></span></label>
             </div>
             <div class="paso-botones">
               <button class="enlace-atras" type="button" data-ir="atras">← Atrás</button>
@@ -140,6 +140,16 @@
             </div>
           </section>
         </form>
+
+        <dialog class="ventana-info" id="info-servicio" aria-labelledby="info-titulo">
+          <div class="ventana-contenido">
+            <button class="ventana-cerrar" type="button" id="info-cerrar" aria-label="Cerrar">×</button>
+            <h2 id="info-titulo"></h2>
+            <div class="etiquetas" id="info-etiquetas"></div>
+            <p id="info-texto"></p>
+            <p style="margin:18px 0 0;text-align:right"><button class="boton" type="button" id="info-elegir">Añadir a mi cita</button></p>
+          </div>
+        </dialog>
 
         <h2 style="margin-top:48px">Otras reservas</h2>
         <ul>

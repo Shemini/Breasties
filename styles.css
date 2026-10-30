@@ -583,3 +583,90 @@ textarea.campo-texto { min-height: 140px; resize: vertical; }
 .banner-duracion { background: var(--durazno); border: 2px solid var(--oro); border-radius: 22px; padding: 14px 20px; margin: 0 0 16px; }
 .sin-calendario { text-align: center; background: var(--crema-2); border-radius: 28px; padding: 26px 22px; box-shadow: 0 6px 0 var(--rosa); }
 .sin-calendario h3 { margin: 0 0 6px; }
+
+/* ---------- Tarjetas compactas e información ---------- */
+.grupos-servicios { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 22px; }
+.grupos-servicios .ancho { grid-column: 1 / -1; }
+.grupos-servicios h3.grupo { margin: 4px 0 10px; font-size: 1.2rem; }
+@media (max-width: 760px) { .grupos-servicios { grid-template-columns: 1fr; } }
+.elecciones.compactas { grid-template-columns: 1fr; gap: 12px; }
+.grupos-servicios .ancho .elecciones.compactas { max-width: calc(50% - 11px); }
+@media (max-width: 760px) { .grupos-servicios .ancho .elecciones.compactas { max-width: none; } }
+.eleccion-envoltorio { position: relative; }
+.compactas .eleccion-caja { padding: 11px 52px 11px 14px; gap: 12px; align-items: center; border-radius: 20px 24px 20px 26px; box-shadow: 0 4px 0 var(--rosa); }
+.compactas .eleccion > input:checked + .eleccion-caja { box-shadow: 0 4px 0 var(--rosa-fuerte); }
+.compactas .eleccion.pack .eleccion-caja { box-shadow: 0 4px 0 var(--oro); }
+.compactas .marca-eleccion { width: 26px; height: 26px; margin-top: 0; }
+.compactas .eleccion-titulo { font-size: 1.08rem; }
+.compactas .etiquetas { margin-top: 3px; }
+.compactas .duraciones { margin-top: 8px; }
+.boton-info {
+  position: absolute; top: 50%; right: 12px; transform: translateY(-50%);
+  width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--rosa-fuerte);
+  background: var(--rosa-claro); color: var(--acento-oscuro);
+  font-family: var(--serif); font-style: italic; font-size: 1.15rem; line-height: 1; cursor: pointer;
+  display: grid; place-items: center; padding: 0;
+}
+.boton-info:hover { background: var(--rosa); }
+.boton-info:focus-visible { outline: 3px solid var(--oro); outline-offset: 2px; }
+.eleccion-envoltorio:has(.duraciones:not([hidden])) .boton-info { top: 14px; transform: none; }
+.i-mini { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--rosa); color: var(--acento-oscuro); font-family: var(--serif); font-style: italic; font-size: .9rem; vertical-align: 1px; }
+
+#paso-1 .consejo { margin-bottom: 18px; padding: 9px 16px; }
+#paso-1 .sub { margin-bottom: 14px; }
+#paso-1 .paso-botones { margin-top: 20px; }
+
+.eleccion.no-disponible { cursor: not-allowed; }
+.eleccion.no-disponible .eleccion-caja { background: #efe6e4; box-shadow: 0 6px 0 #e2d6d4; filter: grayscale(1); opacity: .7; transform: none; }
+.eleccion.no-disponible .eleccion-nota { font-weight: 700; }
+
+.ventana-info {
+  border: 0; padding: 0; background: transparent; color: var(--tinta);
+  width: min(520px, calc(100% - 32px)); max-height: calc(100% - 32px);
+}
+.ventana-info::backdrop { background: rgba(59, 38, 39, .55); }
+.ventana-contenido {
+  position: relative; background: var(--crema-2); border-radius: 30px 34px 28px 36px;
+  padding: 28px 26px 24px; box-shadow: 0 8px 0 var(--rosa-fuerte);
+  animation: aparecer .25s ease;
+}
+.ventana-contenido h2 { font-size: 1.6rem; margin: 0 40px 8px 0; line-height: 1.2; }
+.ventana-contenido p { margin: 14px 0 0; }
+.ventana-cerrar {
+  position: absolute; top: 14px; right: 14px; width: 38px; height: 38px; border-radius: 50%;
+  border: 0; background: var(--rosa-claro); color: var(--acento-oscuro); font-size: 1.6rem; line-height: 1; cursor: pointer;
+}
+.ventana-cerrar:hover { background: var(--rosa); }
+.pasos-progreso .bola svg { width: 16px; height: 16px; }
+.pasos-progreso .bola { width: 26px; height: 26px; }
+.pasos-progreso li.actual .bola { width: 30px; height: 30px; }
+
+/* Compactar la reserva */
+.cabecera-reserva { margin-bottom: 22px; }
+.cabecera-reserva h1 { margin: 0; font-size: clamp(2rem, 4vw, 2.6rem); }
+.cabecera-reserva .manuscrita { margin-bottom: 0; }
+.pasos-progreso { margin-bottom: 20px; }
+#paso-1 > h2 { margin-bottom: 2px; }
+.compactas .eleccion-texto { flex-direction: row; flex-wrap: wrap; align-items: center; column-gap: 10px; row-gap: 4px; }
+.compactas .etiquetas { margin-top: 0; }
+.compactas .duraciones { flex-basis: 100%; }
+.compactas .eleccion-caja { padding-top: 10px; padding-bottom: 10px; min-height: 58px; }
+.elecciones.compactas { gap: 10px; }
+.grupos-servicios h3.grupo { margin: 0 0 8px; }
+#paso-1 .consejo { font-size: .9rem; margin-bottom: 14px; }
+/* Paso 1 a lo ancho (tres columnas); el resto de pasos y textos, estrechos */
+#reserva .paso:not(#paso-1), #reserva + .ventana-info ~ *, .cabecera-reserva ~ h2, .cabecera-reserva ~ ul, .cabecera-reserva ~ p.nota { max-width: 732px; margin-left: auto; margin-right: auto; }
+#paso-1 .sub, #paso-1 .consejo { max-width: 732px; margin-left: auto; margin-right: auto; }
+@media (min-width: 980px) {
+  .grupos-servicios { grid-template-columns: repeat(3, 1fr); }
+  .grupos-servicios .ancho { grid-column: auto; }
+  .grupos-servicios .ancho .elecciones.compactas { max-width: none; }
+  #paso-1 .consejo { max-width: none; justify-content: center; }
+}
+section.bloque-reserva { padding-top: 8px; }
+.bloque-reserva .cabecera-reserva { margin-bottom: 14px; }
+#paso-1 > h2 { font-size: clamp(1.5rem, 3vw, 1.9rem); }
+#paso-1 .sub { margin-bottom: 10px; }
+#paso-1 .paso-botones { margin-top: 16px; }
+.compactas .eleccion-caja { min-height: 52px; padding-top: 8px; padding-bottom: 8px; }
+.elecciones.compactas { gap: 9px; }
