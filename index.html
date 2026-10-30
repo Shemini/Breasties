@@ -40,7 +40,6 @@
           <li><a href="index.html" aria-current="page">Inicio</a></li>
           <li><a href="servicios.html">Servicios</a></li>
           <li><a href="sobre-mi.html">Sobre mí</a></li>
-          <li><a href="blog.html">Blog</a></li>
           <li><a href="contacto.html">Contacto</a></li>
           <li><a class="boton" href="reservar.html">Reservar cita</a></li>
         </ul>
@@ -186,27 +185,16 @@
     </section>
 
     <div class="ola" style="--de:var(--salvia-claro);--a:var(--crema)" aria-hidden="true"><svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0 32 C180 62 320 0 520 30 S840 60 1040 30 S1300 0 1440 32 V60 H0Z"/></svg></div>
-    <section class="bloque crema" style="padding-top:24px">
-      <div class="wrap estrecho">
-        <div class="cabecera-fila">
-          <h2>Del blog</h2>
-          <a href="blog.html"><strong>Ver todos los artículos →</strong></a>
+    <section class="bloque crema" style="padding-top:24px" id="opiniones">
+      <div class="wrap">
+        <div class="cabecera-bloque">
+          <div class="manuscrita">lo que nos cuentan</div>
+          <h2>Familias que ya han pasado por aquí</h2>
+          <p id="opiniones-resumen"></p>
         </div>
-        <div class="articulo-resumen">
-          <div class="portadilla">
-            <svg viewBox="0 0 240 200" aria-hidden="true">
-              <path d="M40 90 C30 40 100 10 150 30 C210 52 230 120 190 160 C150 200 60 190 40 130Z" fill="#f4cfcb" filter="url(#acuarela)"/>
-              <use href="#nube" x="70" y="70" width="100" height="58" style="color:#fffdf9"/>
-              <use href="#chispa" x="178" y="40" width="26" height="26" style="color:#e3b25c"/>
-              <use href="#corazon" x="60" y="44" width="20" height="20" style="color:#b25458"/>
-            </svg>
-          </div>
-          <div class="cuerpo">
-            <div class="meta">artículo de ejemplo</div>
-            <h3><a href="articulo-primeras-semanas.html">Las primeras semanas de lactancia: qué es normal y cuándo pedir ayuda</a></h3>
-            <p>Un repaso tranquilo a lo que suele ocurrir al principio y a las señales por las que conviene consultar.</p>
-          </div>
-        </div>
+        <div class="opiniones" id="lista-opiniones"></div>
+        <p class="centrado" style="margin:34px 0 0"><a class="boton suave" id="enlace-opinar" href="contacto.html" target="_blank" rel="noopener">Déjanos tu opinión en Google</a></p>
+        <p class="nota centrado" id="opiniones-origen">Las opiniones de Google las publican sus autoras en Google. Las demás nos las han enviado familias a las que hemos acompañado y las publicamos con su permiso.</p>
       </div>
     </section>
 
@@ -242,5 +230,7 @@
       <div class="copia">© 2026 Breasties · María Izquierdo. Contenido informativo: no sustituye una consulta sanitaria individual.</div>
     </div>
   </footer>
+  <script src="config.js"></script>
+  <script src="testimonios.js"></script>
 </body>
 </html>

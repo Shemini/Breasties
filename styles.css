@@ -675,3 +675,24 @@ section.bloque-reserva { padding-top: 8px; }
 .casilla input:focus-visible + .casilla-marca { outline: 3px solid var(--oro); outline-offset: 2px; }
 #aviso-urgente { margin: 0 0 20px; }
 @media (max-width: 379px) { .rejilla-servicios .eleccion-titulo { white-space: normal; } }
+
+/* ---------- Opiniones ---------- */
+.opiniones { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 22px; }
+.opinion {
+  position: relative; margin: 0; background: var(--crema-2); border-radius: 30px 34px 28px 36px;
+  padding: 26px 24px 22px; box-shadow: 0 7px 0 var(--rosa); display: flex; flex-direction: column; gap: 12px;
+}
+.opinion:nth-child(3n+2) { box-shadow: 0 7px 0 var(--salvia); }
+.opinion:nth-child(3n+3) { box-shadow: 0 7px 0 var(--durazno); }
+.opinion blockquote { margin: 0; font-size: 1.02rem; flex: 1; }
+.opinion blockquote::before { content: "“"; display: block; font-family: var(--serif); font-size: 3.2rem; line-height: .6; color: var(--rosa-fuerte); margin-bottom: 6px; }
+.opinion figcaption { display: flex; flex-direction: column; gap: 2px; }
+.opinion .autora { font-family: var(--manuscrita); font-size: 1.5rem; line-height: 1.1; color: var(--acento-oscuro); }
+.opinion .detalle, .opinion .fuente { font-size: .88rem; color: var(--tinta-suave); }
+.opinion .fuente { color: var(--acento); }
+.puntuacion { display: flex; gap: 2px; font-size: 1.05rem; }
+.puntuacion .lleno { color: var(--acento); }
+.puntuacion .vacio { color: var(--rosa); }
+.opinion.ejemplo { opacity: .75; }
+.marca-ejemplo { position: absolute; top: 14px; right: 18px; font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; background: var(--durazno); color: #7a4630; padding: 2px 10px; border-radius: 999px; }
+#opiniones-origen { max-width: 640px; margin: 18px auto 0; font-size: .85rem; }

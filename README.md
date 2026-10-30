@@ -15,7 +15,8 @@ Web estática (HTML y CSS, sin instalar nada) para probar el diseño y publicarl
 - `cp.js`: código postal → zona y suplemento (para cambiar un suplemento, edita su número)
 - `zonas.js`: tiempos en coche desde Guzmán el Bueno usados para calcular `cp.js`
 - `sobre-mi.html`: presentación
-- `blog.html` y `articulo-primeras-semanas.html`: blog y un artículo de ejemplo
+- `testimonios.js`: opiniones de la portada (y reseñas de Google si se configuran en `config.js`)
+- `_borradores/`: el blog, guardado sin publicar (las carpetas que empiezan por `_` no se publican en GitHub Pages)
 - `aviso-legal.html`: borrador de aviso legal, privacidad y cookies
 - `styles.css`: todos los colores y estilos (estilo acuarela: rosa empolvado, crema, melocotón y salvia)
 
@@ -89,3 +90,9 @@ En lo alto de `styles.css` están las variables (`--acento`, `--rosa`, `--crema`
 ## Importante antes de publicar
 
 Los textos legales son un borrador. Hazlos revisar por una gestoría o un profesional: se tratan datos de salud.
+
+## Opiniones de Google en la portada (opcional)
+
+1. Crea el Perfil de Empresa de Google (sin local, con zona de servicio) y verifícalo.
+2. Copia el enlace de "Pedir reseñas" en `googleResenasUrl` (`config.js`).
+3. Para mostrar las reseñas con el diseño de la web: en Google Cloud crea un proyecto con facturación, activa "Maps JavaScript API" y "Places API (New)", crea una clave restringida a vuestro dominio y ponla en `googleApiKey`. Busca el Place ID con "Place ID Finder" y ponlo en `googlePlaceId`. Google entrega como máximo 5 reseñas; hay nivel gratuito mensual. Si se activa, menciónalo en la política de privacidad y de cookies.

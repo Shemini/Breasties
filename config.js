@@ -10,5 +10,13 @@ window.CONFIG = {
   whatsapp: "34600000000",
 
   // Correo de contacto
-  email: "EMAIL"
+  email: "EMAIL",
+
+  // OPINIONES DE GOOGLE (opcional). Mientras estén vacíos, solo se muestran las de testimonios.js
+  // Enlace para dejar reseña: Perfil de Empresa > "Pedir reseñas" > copiar enlace
+  googleResenasUrl: "",
+  // Identificador del perfil (Place ID). Se busca en la herramienta "Place ID Finder" de Google
+  googlePlaceId: "",
+  // Clave de la API de Google Maps (restringida a vuestro dominio y a "Places API (New)" + "Maps JavaScript API")
+  googleApiKey: ""
 };
