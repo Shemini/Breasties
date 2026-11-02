@@ -19,17 +19,17 @@
   var SUPLEMENTO_LEJOS = 20;    // desde este suplemento, el margen entre citas sube a 1 h 30 min
 
   var SERVICIOS = [
-    { id: "primera", grupo: "Lactancia", nombre: "Consulta inicial de lactancia",
+    { id: "primera", grupo: "Lactancia", nombre: "Primera consulta de lactancia",
       min: 120, precio: { presencial: 120, online: 80 },
-      info: "Una visita tranquila para ver cómo va la lactancia: observamos una toma, revisamos el agarre y la postura, resolvemos tus dudas y preparamos un plan adaptado a vosotros. Suele durar entre 1 y 2 horas; reservamos 2 para ir sin prisas. Incluye un resumen por escrito.",
-      detalle: "Valoración completa. Dura entre 1 y 2 horas; se reservan 2." },
+      info: "Valoramos a fondo cómo va la lactancia: observamos una toma, revisamos el enganche y la postura y resolvemos tus dudas. Con todo ello diseñamos un plan personalizado. Suele durar entre 1 y 2 horas; reservamos 2 para ir sin prisas.",
+      detalle: "Valoración integral y plan personalizado." },
     { id: "seguimiento", grupo: "Lactancia", nombre: "Seguimiento de lactancia",
       min: 60, duraciones: [30, 45, 60], precio: { presencial: 60, online: 30 },
-      info: "Una revisión después de la consulta inicial para ver cómo evoluciona todo, ajustar el plan y resolver las dudas nuevas. Tú eliges si necesitas 30, 45 o 60 minutos.",
+      info: "Una revisión después de la primera consulta para ver cómo evoluciona todo, ajustar el plan y resolver las dudas nuevas. Tú eliges si necesitas 30, 45 o 60 minutos.",
       detalle: "Revisión de entre 30 y 60 minutos." },
     { id: "destete", grupo: "Lactancia", nombre: "Plan de destete",
       min: 120, precio: { presencial: 100, online: 60 },
-      info: "Te acompaño a planificar un destete respetuoso, al ritmo que necesitéis tu bebé y tú. La primera consulta dura 2 horas; después hacemos seguimientos online de 15 minutos para ir ajustando el plan.",
+      info: "Planifica un destete respetuoso para los dos. La primera consulta dura 2 horas y, durante todo el proceso, puedes reservar seguimientos online de 15 minutos.",
       detalle: "Primera consulta de 2 horas y, después, seguimientos online cortos." },
     { id: "seguimientoDestete", grupo: "Lactancia", nombre: "Seguimiento de destete",
       min: 15, precio: { presencial: null, online: 20 },
@@ -45,8 +45,8 @@
       detalle: "Sesión individual de 2 horas." },
     { id: "porteo", grupo: "Pre-parto", nombre: "Asesoría de porteo",
       min: 30, precio: { presencial: 50, online: null },
-      info: "Aprende a elegir y colocar el portabebés con seguridad y comodidad para ti y tu bebé. Es solo presencial, porque hay que probarlo en persona.",
-      detalle: "Cómo portear con seguridad y comodidad. 30 minutos." }
+      info: "Aprende a portear con seguridad y comodidad, tanto para tu bebé como para ti. Es solo presencial, porque hay que probarlo en persona.",
+      detalle: "Portear con seguridad y comodidad, para tu bebé y para ti." }
   ];
 
   var PACK = {
@@ -178,7 +178,7 @@
       "Servicios: " + nombres,
       "Modalidad: " + (res.modalidad === "presencial" ? "presencial" + (res.zona ? " (" + res.zona + ")" : "") : "online"),
       "Duración reservada: " + fmtDuracion(res.minutos),
-      "Precio estimado: " + fmtEuros(res.total) + " (pago en efectivo o Bizum)"
+      "Precio estimado: " + fmtEuros(res.total) + " (pago en efectivo, Bizum o transferencia)"
     ];
     if (extra && extra.cp) lineas.splice(2, 0, "Código postal: " + extra.cp);
     if (extra && extra.nota) lineas.push("Nota: " + extra.nota);
@@ -486,7 +486,7 @@
     tabla.appendChild(el("tr", { class: "total" }, [el("td", { text: "Total · " + R.fmtDuracion(res.minutos) }), el("td", { class: "der", text: R.fmtEuros(res.total) })]));
     caja.appendChild(tabla);
     if (res.sugerenciaPack && res.sugerenciaPack.ahorro > 0) caja.appendChild(el("p", { class: "nota", text: "Consejo: el pack de preparación a la maternidad incluye estos tres servicios y te sale " + R.fmtEuros(res.sugerenciaPack.ahorro) + " más barato." }));
-    caja.appendChild(el("p", { class: "nota", text: "Pago en efectivo o Bizum." + (res.solo_manana ? " Por su duración, solo hay huecos por la mañana." : "") }));
+    caja.appendChild(el("p", { class: "nota", text: "Pago en efectivo, Bizum o transferencia al terminar la consulta." + (res.solo_manana ? " Por su duración, solo hay huecos por la mañana." : "") }));
     res.errores.forEach(function (m) { caja.appendChild(el("p", { class: "error", text: m })); });
 
     var extra = { cp: modalidad === "presencial" ? estado.cp : "", nota: estado.nota.trim() };

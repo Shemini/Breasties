@@ -55,7 +55,7 @@ También hay que reemplazar los textos de ejemplo y añadir fotos: en los marcos
 
 ## Citas con Cal.com (Google Calendar)
 
-Pago en efectivo o Bizum; las facturas las gestionáis vosotros. Sin Stripe por ahora.
+Pago en efectivo, Bizum o transferencia al terminar la consulta; las facturas las gestionáis vosotros. Sin Stripe por ahora.
 
 1. Crea una cuenta gratuita en cal.com y conecta **Google Calendar** (Ajustes > Calendarios).
 2. Crea dos horarios: **Consultas** (10:00-14:00 y 16:00-18:00, lunes a viernes, ajusta los días) y **Pack** (10:00-14:30 y 16:00-18:00).
@@ -69,7 +69,7 @@ Pago en efectivo o Bizum; las facturas las gestionáis vosotros. Sin Stripe por 
 | `pack-preparacion` | Pack | 270 min fijos | 60 min |
 | `pack-preparacion-lejos` | Pack | 270 min fijos | 90 min |
 
-4. En todos: reservas hasta 30 días vista, **aviso mínimo de 36 h** (Cal.com cuenta horas, no días de calendario: con 36 h, quien reserve entre las 6:00 y las 22:00 no verá ningún hueco para el día siguiente), intervalo de huecos de 15 min. Ubicación: Google Meet en los online; "dirección del asistente" en los presenciales. Añade un campo de dirección y teléfono. En el texto de confirmación indica pago en efectivo o Bizum.
+4. En todos: reservas hasta 30 días vista, **aviso mínimo de 36 h** (Cal.com cuenta horas, no días de calendario: con 36 h, quien reserve entre las 6:00 y las 22:00 no verá ningún hueco para el día siguiente), intervalo de huecos de 15 min. Ubicación: Google Meet en los online; "dirección del asistente" en los presenciales. Añade un campo de dirección y teléfono. En el texto de confirmación indica pago en efectivo, Bizum o transferencia al terminar la consulta.
 5. Pon tu usuario en `config.js`. Mientras siga `TU-USUARIO`, el último paso de la reserva ofrece pedir cita por WhatsApp o correo con el resumen (así no sale la página 404 de Cal.com).
 
 Las reservas urgentes (para el día siguiente, +20 €) se piden por WhatsApp; el aviso aparece junto al calendario.

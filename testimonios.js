@@ -11,7 +11,7 @@
      el enlace a Google como exige Google.
 */
 window.TESTIMONIOS = [
-  { texto: "Texto de ejemplo: aquí aparecerá lo que nos cuente una familia sobre la consulta.", autora: "Nombre de ejemplo", detalle: "Consulta inicial de lactancia", ejemplo: true },
+  { texto: "Texto de ejemplo: aquí aparecerá lo que nos cuente una familia sobre la consulta.", autora: "Nombre de ejemplo", detalle: "Primera consulta de lactancia", ejemplo: true },
   { texto: "Texto de ejemplo: sustituye estas frases por opiniones reales en testimonios.js.", autora: "Nombre de ejemplo", detalle: "Preparación del parto", ejemplo: true },
   { texto: "Texto de ejemplo: cuando tengáis opiniones en Google, también aparecerán aquí.", autora: "Nombre de ejemplo", detalle: "Asesoría de porteo", ejemplo: true }
 ];
